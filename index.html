@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+    	<meta charset="utf-8">
+    	<meta name="description" content="This is where your description goes">
+    	<meta name="keywords" content="one, two, three">
+
+		<title>Baby activity tracker</title>
+
+		<!-- external CSS link -->
+		<link rel="stylesheet" href="style.css">
+	</head>
+	<body>
+        <h1>Baby Tracker</h1>
+
+		<img src="pictures/CuteBaby.jpg" alt="Your little bundle of joy">
+
+        <div id="mainSection">
+            <div class = "dateSections">
+                <h2 id = 'todayDate'></h2>
+                <h2 id = 'todayTime'></h2>
+                <h3><button type="button" onclick="activity(this.id)" id ="manualLog">Log Manual Activity</button></h3>
+            </div>
+            <div id = 'manualInput'>
+                <div class="manualSections">
+                    <h2>Feeding Times </h2>
+                    <form action="/action_page.php">
+                    <span>Add Time: </span>
+                    <input type="time" id="foodTime" value=""> 
+                    <button type="button" onclick="activity(this.id)" id = "mFood">Submit</button>
+                    </form>
+                </div>
+                <div class="manualSections">
+                    <h2>Sleeping Time </h2>
+                    <form action="/action_page.php">
+                        <label for="sleeping">Start:</label>
+                        <input type="Time" id="sTime" value="">
+                        <label for="waking">Finish:</label>
+                        <input type="Time" id="fTime" value="">
+                        <button type="button" onclick="activity(this.id)" id = "mSleep">Submit</button>
+                    </form>
+                </div>
+                <div class="manualSections">
+                    <h2>Nappy time </h2>
+                    <form action="/action_page.php" id = "tickbox">
+                    <input type="checkbox" id="no1" value="1">
+                    <label for="1"> No 1</label><br>
+                    <input type="checkbox" id="no2" value="2">
+                    <label for="2"> No 2</label><br>
+                    <button type="button" onclick="activity(this.id)" id = "mNappy">Submit</button>
+                    </form>
+
+                </div>
+            </div>
+            <div class="sections">
+                <img src="pictures/babyEating.jpg" id = "eatingBaby" alt="Food">
+                <h2>Feeding Times </h2>
+                <!-- <form action="/action_page.php"> -->
+                    <!-- <span>Current time: </span> -->
+                    <!-- <input type="time" id="foodTime" value=""> -->
+                    <button type="button" onclick="activity(this.id)" id = "food">Food Done</button>
+                <!-- </form> -->
+            </div>
+            <div class="sections">
+                <img src="pictures/sleepingBaby.avif" id = "sleepingBaby" alt="sleeping">
+                <h2>Sleeping Time </h2>
+                <!-- <form action="/action_page.php"> -->
+                    <!-- <label for="sleeping">Start:</label>
+                    <input type="Time" id="sTime" value=""> -->
+                    <!-- <label for="waking">Finish:</label>
+                    <input type="Time" id="fTime" value=""> -->
+                    <!-- <button onclick="sleeping()">Submit</button> -->
+                <button type="button" onclick="activity(this.id)" id = "napStart">Starting Nap</button>
+                <button type="button" onclick="activity(this.id)" id = "napFinish">Finishing Nap</button>
+                <!-- </form> -->
+            </div>
+            <div class="sections">
+                <img src="pictures/nappy.png" id = "nappyB" alt="nappy">
+                <h2>Nappy time </h2>
+                <!-- <form action="/action_page.php" id = "tickbox" > -->
+                    <!-- <span></span>
+                    <input type="checkbox" id="no1" value="1">
+                    <label for="1"> No 1</label><br>
+                    <input type="checkbox" id="no2" value="2">
+                    <label for="2"> No 2</label><br> -->
+                <button type="button" onclick="activity(this.id)" id = "num1">No 1 Done</button>
+                <button type="button" onclick="activity(this.id)" id = "num2">No 2 Done</button>
+                <!-- </form> -->
+            </div>
+        </div>
+        <div id = "results">
+            
+        </div>
+
+		<script type="text/javascript" src="main.js"></script>
+	</body>
+</html>

@@ -1,0 +1,91 @@
+/******************************************
+/* CSS
+/*******************************************/
+
+/* Box Model Hack */
+*{
+  box-sizing: border-box;
+}
+
+/******************************************
+/* LAYOUT
+/*******************************************/
+
+img{
+  display: block;
+  margin: 0 auto;
+  width: 25%;
+
+}
+
+
+div img{
+  height: 80px;
+}
+
+h1{
+  color: Green;
+  text-align: center;
+}
+
+h2, h3{
+  color: grey;
+  text-align: center;
+  margin-bottom: 10px;
+}
+
+body{
+  background-color: mintcream;
+}
+
+#tickbox{
+  display:flex;
+  width: 40%;
+  justify-content: space-between;
+}
+
+a{
+  text-decoration: none;
+  padding: 4px;
+  border: 1px solid black;
+  background: grey;
+  color: white;
+}
+
+/******************************************
+/* ADDITIONAL STYLES
+/*******************************************/
+.sections, .manualSections{
+  background:lightyellow;
+  border: 1px solid black;
+  width:33%;
+  float: left;
+  height: 170px;
+}
+
+#manualInput{
+  display: none;
+}
+
+#eatingBaby{
+  width: 20%;
+}
+
+#sleepingBaby{
+  width: 25%;
+}
+
+#nappyB{
+  width: 15%;
+}
+
+/* #manualInput{
+  display: block
+} */
+
+#food{
+  margin-left: 40%;
+}
+#napStart,#num1 {
+  margin-left: 32%;
+}

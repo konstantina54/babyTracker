@@ -1,3 +1,5 @@
+import { logData} from './server.js'; 
+// const { logData } = require('./server.js');
 
 const d = new Date();
 let minutes = d.getMinutes();
@@ -22,11 +24,14 @@ function activity(clicked){
         manualSection.style.display = "none";
     }
 
-    if (clicked === "food" || clicked === "mFood"){
-        console.log('food input')
-    } else if (clicked === "num1" || clicked === "num2" || clicked === "mNappy"){
-        console.log('nappy input')
-    } else if (clicked === "napStart" || clicked === "napFinish" || clicked === 'mSleep'){
-        console.log('sleep input')
+    if (clicked === "mNappy" || clicked === "mFood" || clicked === 'mSleep'){
+        console.log(logData('manual input'))
+    } else if (clicked === "food"){
+        console.log(logData('food input'))
+    } else if (clicked === "num1" || clicked === "num2"){
+        console.log(logData('nappy input'))
+    } else if (clicked === "napStart" || clicked === "napFinish"){
+        console.log(logData('sleep input'))
     }
 }
+

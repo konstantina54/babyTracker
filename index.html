@@ -24,7 +24,7 @@
             <div id = 'manualInput'>
                 <div class="manualSections">
                     <h2>Feeding Times </h2>
-                    <form action="/action_page.php">
+                    <form action="/" method="POST">
                     <span>Add Time: </span>
                     <input type="time" id="foodTime" value=""> 
                     <button type="button" onclick="activity(this.id)" id = "mFood">Submit</button>
@@ -32,7 +32,7 @@
                 </div>
                 <div class="manualSections">
                     <h2>Sleeping Time </h2>
-                    <form action="/action_page.php">
+                    <form action="/" method="POST">
                         <label for="sleeping">Start:</label>
                         <input type="Time" id="sTime" value="">
                         <label for="waking">Finish:</label>
@@ -42,7 +42,7 @@
                 </div>
                 <div class="manualSections">
                     <h2>Nappy time </h2>
-                    <form action="/action_page.php" id = "tickbox">
+                    <form action="/" method="POST" id = "tickbox">
                     <input type="checkbox" id="no1" value="1">
                     <label for="1"> No 1</label><br>
                     <input type="checkbox" id="no2" value="2">
@@ -55,16 +55,16 @@
             <div class="sections">
                 <img src="pictures/babyEating.jpg" id = "eatingBaby" alt="Food">
                 <h2>Feeding Times </h2>
-                <!-- <form action="/action_page.php"> -->
+                <form action="/" method="POST">
                     <!-- <span>Current time: </span> -->
                     <!-- <input type="time" id="foodTime" value=""> -->
                     <button type="button" onclick="activity(this.id)" id = "food">Food Done</button>
-                <!-- </form> -->
+                </form>
             </div>
             <div class="sections">
                 <img src="pictures/sleepingBaby.avif" id = "sleepingBaby" alt="sleeping">
                 <h2>Sleeping Time </h2>
-                <!-- <form action="/action_page.php"> -->
+                <form action="/" method="POST">
                     <!-- <label for="sleeping">Start:</label>
                     <input type="Time" id="sTime" value=""> -->
                     <!-- <label for="waking">Finish:</label>
@@ -72,24 +72,28 @@
                     <!-- <button onclick="sleeping()">Submit</button> -->
                 <button type="button" onclick="activity(this.id)" id = "napStart">Starting Nap</button>
                 <button type="button" onclick="activity(this.id)" id = "napFinish">Finishing Nap</button>
-                <!-- </form> -->
+                </form>
             </div>
             <div class="sections">
                 <img src="pictures/nappy.png" id = "nappyB" alt="nappy">
                 <h2>Nappy time </h2>
-                <!-- <form action="/action_page.php" id = "tickbox" > -->
+                <form action="/" method="POST">
                     <!-- <span></span>
                     <input type="checkbox" id="no1" value="1">
                     <label for="1"> No 1</label><br>
-                    <input type="checkbox" id="no2" value="2">
-                    <label for="2"> No 2</label><br> -->
+                     <input type="checkbox" id="no2" value="2"> -->
+                    <!-- <label for="2" hidden> No 2</label><br> -->
                 <button type="button" onclick="activity(this.id)" id = "num1">No 1 Done</button>
                 <button type="button" onclick="activity(this.id)" id = "num2">No 2 Done</button>
-                <!-- </form> -->
+                </form>
             </div>
         </div>
         <div id = "results">
-            
+            <!-- <form action="/quotes" method="POST">
+                <input type="text" placeholder="name" name="name" />
+                <input type="text" placeholder="quote" name="quote" />
+                <button type="submit">Submit</button>
+              </form> -->
         </div>
 
 		<script type="text/javascript" src="main.js"></script>

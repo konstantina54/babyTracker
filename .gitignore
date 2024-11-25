@@ -1,0 +1,8 @@
+test.txt
+pictures
+package-lock.json
+package.json
+node-modules
+server.js
+.DS_Store
+node_modules/

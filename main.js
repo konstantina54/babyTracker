@@ -12,7 +12,7 @@ document.getElementById("todayTime").innerHTML = `Time: ${hours}:${minutes}`;
 // Display previous inputs below the submit button
 
 // end of every day it adds a line between the days
-// get current time from the innitual block and then collect times from manual 
+// get current time from the innitual block and then collect times from manual.
 const manualSection = document.getElementById("manualInput");
 
 function activity(clicked){

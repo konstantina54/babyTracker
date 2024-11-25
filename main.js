@@ -13,7 +13,6 @@ document.getElementById("todayTime").innerHTML = `Time: ${hours}:${minutes}`;
 
 // end of every day it adds a line between the days
 // get current time from the innitual block and then collect times from manual
-// use the stopwatch from object lesson to calculate sleep duration
 const manualSection = document.getElementById("manualInput");
 
 function activity(clicked){

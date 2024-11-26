@@ -8,12 +8,12 @@
 		<title>Baby activity tracker</title>
 
 		<!-- external CSS link -->
-		<link rel="stylesheet" href="style.css">
+		<link rel="stylesheet" href="static/style.css" type="text/css">
 	</head>
 	<body>
         <h1>Baby Tracker</h1>
 
-		<img src="pictures/CuteBaby.jpg" alt="Your little bundle of joy">
+		<img src="static/CuteBaby.jpg" alt="Your little bundle of joy">
 
         <div id="mainSection">
             <div class = "dateSections">
@@ -53,7 +53,7 @@
                 </div>
             </div>
             <div class="sections">
-                <img src="pictures/babyEating.jpg" id = "eatingBaby" alt="Food">
+                <img src="static/babyEating.jpg" id = "eatingBaby" alt="Food">
                 <h2>Feeding Times </h2>
                 <form action="/" method="POST">
                     <!-- <span>Current time: </span> -->
@@ -62,7 +62,7 @@
                 </form>
             </div>
             <div class="sections">
-                <img src="pictures/sleepingBaby.avif" id = "sleepingBaby" alt="sleeping">
+                <img src="static/sleepingBaby.avif" id = "sleepingBaby" alt="sleeping">
                 <h2>Sleeping Time </h2>
                 <form action="/" method="POST">
                     <!-- <label for="sleeping">Start:</label>
@@ -75,7 +75,7 @@
                 </form>
             </div>
             <div class="sections">
-                <img src="pictures/nappy.png" id = "nappyB" alt="nappy">
+                <img src="static/nappy.png" id = "nappyB" alt="nappy">
                 <h2>Nappy time </h2>
                 <form action="/" method="POST">
                     <!-- <span></span>
@@ -89,6 +89,7 @@
             </div>
         </div>
         <div id = "results">
+            <span>{{ check }}</span>
             <!-- <form action="/quotes" method="POST">
                 <input type="text" placeholder="name" name="name" />
                 <input type="text" placeholder="quote" name="quote" />
@@ -96,6 +97,6 @@
               </form> -->
         </div>
 
-		<script type="text/javascript" src="main.js"></script>
+		<script type="text/javascript" src="static/main.js"></script>
 	</body>
 </html>

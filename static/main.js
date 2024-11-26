@@ -1,5 +1,3 @@
-import { logData} from './server.js'; 
-// const { logData } = require('./server.js');
 
 const d = new Date();
 let minutes = d.getMinutes();

@@ -8,19 +8,11 @@ app = Flask(__name__)
 
 @app.route('/')
 def collectData():
-    # button_id = request.form['id']
+    # button_id = request.form['tickbox']
     # print(button_id)
     check = "testing please show!"
     # print(request.form.get("search"))
     return render_template('index.html', check = check)
-
-
-
-
-
-
-
-
 
 
 

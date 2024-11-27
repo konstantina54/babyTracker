@@ -12,23 +12,50 @@ document.getElementById("todayTime").innerHTML = `Time: ${hours}:${minutes}`;
 // end of every day it adds a line between the days
 // get current time from the innitual block and then collect times from manual
 const manualSection = document.getElementById("manualInput");
+// let checkbox = otherCheckbox.addEventListener("change", () => {
 
 function activity(clicked){
     const currentTime = `${hours}:${minutes}`
-    if ((clicked === "manualLog" && manualSection.style.display === "") || (clicked === "manualLog" && manualSection.style.display === "none")){
+    console.log(currentTime);
+    let input =  'Automatic input';
+    if (clicked === "manualLog"){
+        input = "Manual Input";
+        if (manualSection.style.display === "" ||  manualSection.style.display === "none"){
         manualSection.style.display = "block";
-    } else {
+        } else {
         manualSection.style.display = "none";
-    }
-
-    if (clicked === "mNappy" || clicked === "mFood" || clicked === 'mSleep'){
-        console.log(logData('manual input'))
-    } else if (clicked === "food"){
-        console.log(logData('food input'))
-    } else if (clicked === "num1" || clicked === "num2"){
-        console.log(logData('nappy input'))
-    } else if (clicked === "napStart" || clicked === "napFinish"){
-        console.log(logData('sleep input'))
+        }
+        manualInput(clicked, input)    
+    } else {
+        autoInput(clicked, input)
     }
 }
 
+
+function manualInput(activity, input){
+    const one = document.querySelector("no1");
+    const noTwo = document.querySelector("no2");
+    one.addEventListener("change", (event) => {
+    console.log("it was pressed 1")
+    });
+}
+
+
+
+    // if (activity ==="food"){
+    //     let x = document.getElementById("foodTime").value
+    //     console.log(x)
+    // }
+//     console.log(`input is ${input} and ${activity}`);
+// }
+
+
+function autoInput(activity, input){
+    if (activity === "food"){
+        console.log(`input is ${input} and ${activity}`);
+    } else if (activity === "num1" || activity === "num2"){
+        console.log(`input is ${input} and ${activity}`);
+    } else if (activity=== "napStart" || activity === "napFinish"){
+        console.log(`input is ${input} and ${activity}`);
+    }
+}

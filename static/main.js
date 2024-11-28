@@ -20,6 +20,7 @@ function activity(clicked){
     let input =  'Automatic input';
     if (clicked === "manualLog"){
         input = "Manual Input";
+        manualClick(clicked)
         if (manualSection.style.display === "" ||  manualSection.style.display === "none"){
         manualSection.style.display = "block";
         } else {
@@ -31,12 +32,22 @@ function activity(clicked){
     }
 }
 
+function manualClick(submitted){
+    console.log(submitted);
+}
+
+
 
 function manualInput(activity, input){
-    const one = document.querySelector("no1");
-    const noTwo = document.querySelector("no2");
+    const one = document.querySelector("#no1");
+    const noTwo = document.querySelector("#no2");
+    // get a class for the manual clocks and use to get any of it when added understand how the event listener below works
+    console.log(activity);
     one.addEventListener("change", (event) => {
-    console.log("it was pressed 1")
+        console.log(` it's ${event.target.value}`)
+    });
+    noTwo.addEventListener("change", (event) => {
+        console.log(` it's ${event.target.value}`)
     });
 }
 

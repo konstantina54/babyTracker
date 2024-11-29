@@ -25,24 +25,27 @@ function activity(clicked){
         manualSection.style.display = "block";
         } else {
         manualSection.style.display = "none";
-        }
-        manualInput(clicked, input)    
+        }   
     } else {
         autoInput(clicked, input)
     }
 }
 
 function manualClick(submitted){
+    manualInput() 
+    if (submitted === "mNappy"){
+        manualInput(submitted)
+    }
     console.log(submitted);
 }
 
 
 
-function manualInput(activity, input){
+function manualInput(){
     const one = document.querySelector("#no1");
     const noTwo = document.querySelector("#no2");
     // get a class for the manual clocks and use to get any of it when added understand how the event listener below works
-    console.log(activity);
+    console.log("Nappy triggered");
     one.addEventListener("change", (event) => {
         console.log(` it's ${event.target.value}`)
     });

@@ -27,29 +27,29 @@
                     <h2>Feeding Times </h2>
                     <form action="/">
                     <span>Add Time: </span>
-                    <input type="time" id="foodTime" value=""> 
-                    <button type="button" onclick="activity(this.id)" id = "mFood">Submit</button>
+                    <input type="time" id="foodTime" class = "manualTime" value=""> 
+                    <button type="button" onclick="manualClick(this.id)" id = "mFood">Submit</button>
                     </form>
                 </div>
                 <div class="manualSections">
                     <h2>Sleeping Time </h2>
                     <form action="/">
                         <label for="sleeping">Start:</label>
-                        <input type="Time" id="sTime" value="">
+                        <input type="Time" id="sTime" class = "manualTime" value="">
                         <label for="waking">Finish:</label>
-                        <input type="Time" id="fTime" value="">
-                        <button type="button" onclick="activity(this.id)" id = "mSleep">Submit</button>
+                        <input type="Time" id="fTime" class = "manualTime" value="">
+                        <button type="button" onclick="manualClick(this.id)" id = "mSleep">Submit</button>
                     </form>
                 </div>
                 <div class="manualSections">
                     <h2>Nappy time </h2>
                     <form action="/">
-                    <input type="Time" id="pottyTime" value="">    
+                    <input type="Time" id="pottyTime" class = "manualTime" value="">    
                     <input type="checkbox" id="no1" value="1">
                     <label for="1"> No 1</label><br>
                     <input type="checkbox" id="no2" value="2">
                     <label for="2"> No 2</label><br>
-                    <button type="button" onclick="activity(this.id)" id = "mNappy">Submit</button>
+                    <button type="button" onclick="manualClick(this.id)" id = "mNappy">Submit</button>
                     </form>
 
                 </div>

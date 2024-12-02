@@ -1,18 +1,17 @@
 
 const d = new Date();
-let minutes = d.getMinutes();
+// let minutes = d.getMinutes();
 let hours = d.getHours();
+let minutes = (d.getMinutes() < 10 ? '0' : '') + d.getMinutes();
 document.getElementById("todayDate").innerHTML = "Date: "+d.toISOString().substring(0, 10);
 document.getElementById("todayTime").innerHTML = `Time: ${hours}:${minutes}`;
-// document.getElementById("foodTime").value = `${hours}:${minutes}`;
-// document.getElementById("sTime").value = `${hours}:${minutes}`;
-// document.getElementById("fTime").value = `${hours}:${minutes}`;
 // Display previous inputs below the submit button
 
-// end of every day it adds a line between the days
-// get current time from the innitual block and then collect times from manual
 const manualSection = document.getElementById("manualInput");
-// let checkbox = otherCheckbox.addEventListener("change", () => {
+// const form = document.getElementById("mNappy");
+// const clearForm = form.addEventListener("submit", resetData);
+
+
 
 function activity(clicked){
     const currentTime = `${hours}:${minutes}`
@@ -20,50 +19,57 @@ function activity(clicked){
     let input =  'Automatic input';
     if (clicked === "manualLog"){
         input = "Manual Input";
-        manualClick(clicked)
+        manualActivities(clicked)
         if (manualSection.style.display === "" ||  manualSection.style.display === "none"){
-        manualSection.style.display = "block";
+            manualSection.style.display = "block";
         } else {
-        manualSection.style.display = "none";
+            manualSection.style.display = "none";
         }   
     } else {
         autoInput(clicked, input)
     }
 }
 
-function manualClick(submitted){
-    manualInput() 
+
+function manualActivities(submitted){
     if (submitted === "mNappy"){
-        manualInput(submitted)
+        manualNappyActivity(submitted)
+        time = document.getElementById("pottyTime").value;
+        console.log("potty path "+time);
+        // test()
+        // document.getElementById("mNappy").reset();
+        // doesn't allow input it keeps refreshing
+    } else if( submitted === "mFood"){
+        time = document.getElementById("foodTime").value;
+        console.log("food time " + time);
+        // document.getElementById(`${submitted}`).reset();
+    }else if( submitted === "mSleep"){
+        let stime = document.getElementById("sTime").value;
+        let ftime = document.getElementById("fTime").value;
+        console.log("sleep " +stime+" or "+ftime);
+        // document.getElementById(`${submitted}`).reset();
     }
-    console.log(submitted);
+}
+
+function test(){
+    // why did this reset the whole thing?
+    var frm = document.getElementById('mNappy');
+    console.log(frm.submit())
+     // Submit the form
+    setInterval(frm.reset(), 5000);  
 }
 
 
-
-function manualInput(){
-    const one = document.querySelector("#no1");
-    const noTwo = document.querySelector("#no2");
-    // get a class for the manual clocks and use to get any of it when added understand how the event listener below works
-    console.log("Nappy triggered");
-    one.addEventListener("change", (event) => {
-        console.log(` it's ${event.target.value}`)
-    });
-    noTwo.addEventListener("change", (event) => {
-        console.log(` it's ${event.target.value}`)
-    });
+function manualNappyActivity(submitted){
+    const one = document.querySelector("#no1").checked;
+    const noTwo = document.querySelector("#no2").checked;
+    console.log(one+" "+noTwo)
+    // returns true/false can be added directly to file like that
 }
 
 
-
-    // if (activity ==="food"){
-    //     let x = document.getElementById("foodTime").value
-    //     console.log(x)
-    // }
-//     console.log(`input is ${input} and ${activity}`);
-// }
-
-
+    
+    
 function autoInput(activity, input){
     if (activity === "food"){
         console.log(`input is ${input} and ${activity}`);
@@ -73,3 +79,4 @@ function autoInput(activity, input){
         console.log(`input is ${input} and ${activity}`);
     }
 }
+

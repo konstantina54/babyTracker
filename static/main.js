@@ -8,8 +8,6 @@ document.getElementById("todayTime").innerHTML = `Time: ${hours}:${minutes}`;
 // Display previous inputs below the submit button
 
 const manualSection = document.getElementById("manualInput");
-// const form = document.getElementById("mNappy");
-// const clearForm = form.addEventListener("submit", resetData);
 
 
 
@@ -19,7 +17,6 @@ function activity(clicked){
     let input =  'Automatic input';
     if (clicked === "manualLog"){
         input = "Manual Input";
-        manualActivities(clicked)
         if (manualSection.style.display === "" ||  manualSection.style.display === "none"){
             manualSection.style.display = "block";
         } else {
@@ -36,27 +33,14 @@ function manualActivities(submitted){
         manualNappyActivity(submitted)
         time = document.getElementById("pottyTime").value;
         console.log("potty path "+time);
-        // test()
-        // document.getElementById("mNappy").reset();
-        // doesn't allow input it keeps refreshing
     } else if( submitted === "mFood"){
         time = document.getElementById("foodTime").value;
         console.log("food time " + time);
-        // document.getElementById(`${submitted}`).reset();
     }else if( submitted === "mSleep"){
         let stime = document.getElementById("sTime").value;
         let ftime = document.getElementById("fTime").value;
         console.log("sleep " +stime+" or "+ftime);
-        // document.getElementById(`${submitted}`).reset();
     }
-}
-
-function test(){
-    // why did this reset the whole thing?
-    var frm = document.getElementById('mNappy');
-    console.log(frm.submit())
-     // Submit the form
-    setInterval(frm.reset(), 5000);  
 }
 
 

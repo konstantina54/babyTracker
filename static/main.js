@@ -42,6 +42,7 @@ function manualActivities(submitted){
         console.log("sleep " +stime+" or "+ftime);
     }
 }
+// submit refreshes the page too quickly, need to be delayed somehow
 
 
 function manualNappyActivity(submitted){
@@ -51,8 +52,6 @@ function manualNappyActivity(submitted){
     // returns true/false can be added directly to file like that
 }
 
-
-    
     
 function autoInput(activity, input){
     if (activity === "food"){

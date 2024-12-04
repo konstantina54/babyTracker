@@ -20,62 +20,70 @@
             <div class = "dateSections">
                 <h2 id = 'todayDate'></h2>
                 <h2 id = 'todayTime'></h2>
-                <h3><button type="button" onclick="activity(this.id)" id ="manualLog">Log Manual Activity</button></h3>
+                <h3><button type="button" onclick="activity()" id ="manualLog">Log Manual Activity</button></h3>
             </div>
             <div id = 'manualInput'>
                 <div class="manualSections">
                     <h2>Feeding Times </h2>
-                    <form action="/" onsubmit="manualActivities(this.id)" id = "mFood">
+                    <form action="/submit" method="POST">
+                    <!-- <form action="/" onsubmit="manualActivities(this.id)" id = "mFood"> -->
                     <span>Add Time: </span>
-                    <input type="time" id="foodTime" value=""> 
+                    <input type="time" id="foodTime" value = "" name="foodTime"> 
                     <button type="submit">Submit</button>
                     </form>
                 </div>
                 <div class="manualSections">
                     <h2>Sleeping Time </h2>
-                    <form action="/" onsubmit="manualActivities(this.id)" id = "mSleep">
+                    <form action="/submit" method="POST">
+                    <!-- <form action="/" onsubmit="manualActivities(this.id)" id = "mSleep"> -->
                         <label for="sleeping">Start:</label>
-                        <input type="Time" id="sTime" value="">
+                        <input type="Time" id="sTime" value="" name = "sTime">
                         <label for="waking">Finish:</label>
-                        <input type="Time" id="fTime" value="">
+                        <input type="Time" id="fTime" value="" name = "fTime">
                         <button type="submit" >Submit</button>
                     </form>
                 </div>
                 <div class="manualSections">
                     <h2>Nappy time </h2>
-                    <form action="/" onsubmit="manualActivities(this.id)" id = "mNappy">
-                    <input type="Time" id="pottyTime" value="">    
-                    <input type="checkbox" id="no1">
+                    <!-- <form action="/submit" onsubmit="manualActivities(this.id)" id = "mNappy"> -->
+                    <form action="/submit" method="POST">
+                    <input type="Time" id="pottyTime" name="pottyTime">    
+                    <input type="checkbox" id="no1" name="no1" value="on">
                     <label for="1"> No 1</label><br>
-                    <input type="checkbox" id="no2">
+                    <input type="checkbox" id="no2" name="no2" value="on">
                     <label for="2"> No 2</label><br>
                     <button type="submit">Submit</button>
                     </form>
 
                 </div>
             </div>
-            <div class="sections">
-                <img src="static/babyEating.jpg" id = "eatingBaby" alt="Food">
-                <h2>Feeding Times </h2>
-                <form action="submit" method="POST">
-                    <button type="button" onclick="activity(this.id)" id = "food">Food Done</button>
-                </form>
-            </div>
-            <div class="sections">
-                <img src="static/sleepingBaby.avif" id = "sleepingBaby" alt="sleeping">
-                <h2>Sleeping Time </h2>
-                <form action="submit" method="POST" id = sleepTimes>
-                <button type="button" onclick="activity(this.id)" id = "napStart">Starting Nap</button>
-                <button type="button" onclick="activity(this.id)" id = "napFinish">Finishing Nap</button>
-                </form>
-            </div>
-            <div class="sections">
-                <img src="static/nappy.png" id = "nappyB" alt="nappy">
-                <h2>Nappy time </h2>
-                <form action="/" method="POST">
-                <button type="button" onclick="activity(this.id)" id = "num1">No 1 Done</button>
-                <button type="button" onclick="activity(this.id)" id = "num2">No 2 Done</button>
-                </form>
+            <div id = "autoInput">
+                <div class="sections">
+                    <img src="static/babyEating.jpg" id = "eatingBaby" alt="Food">
+                    <h2>Feeding Times </h2>
+                    <form action="/submit" method="POST">
+                    <button type="submit" id = "food" name = "auto.food">Submit</button>
+                    <!-- <button type="button" onclick="activity(this.id)" id = "food">Food Done</button> -->
+                    </form>
+                </div>
+                <div class="sections">
+                    <img src="static/sleepingBaby.avif" id = "sleepingBaby" alt="sleeping">
+                    <h2>Sleeping Time </h2>
+                    <form action="/submit" method="POST" id = sleepTimes>
+                    <button type="submit" id = "startNap" name = "auto.startNap">Submit</button>
+                    <button type="submit" id = "finishNap" name = "auto.finishNap">Submit</button>
+                    <!-- <button type="button" onclick="activity(this.id)" id = "napStart">Starting Nap</button>
+                    <button type="button" onclick="activity(this.id)" id = "napFinish">Finishing Nap</button> -->
+                    </form>
+                </div>
+                <div class="sections">
+                    <img src="static/nappy.png" id = "nappyB" alt="nappy">
+                    <h2>Nappy time </h2>
+                    <form action="/submit" method="POST">
+                    <button type="submit" id = "number1" name = "auto.number1">No 1 Done</button>
+                    <button type="submit" id = "number2" name = "auto.number2">No 2 Done</button>
+                    </form>
+                </div>
             </div>
         </div>
         <div id = "results">

@@ -8,58 +8,17 @@ document.getElementById("todayTime").innerHTML = `Time: ${hours}:${minutes}`;
 // Display previous inputs below the submit button
 
 const manualSection = document.getElementById("manualInput");
+const autoSection = document.getElementsById("autoInput");
 
 
-
-function activity(clicked){
+function activity(){
     const currentTime = `${hours}:${minutes}`
     console.log(currentTime);
-    let input =  'Automatic input';
-    if (clicked === "manualLog"){
-        input = "Manual Input";
-        if (manualSection.style.display === "" ||  manualSection.style.display === "none"){
-            manualSection.style.display = "block";
-        } else {
-            manualSection.style.display = "none";
-        }   
+    if (manualSection.style.display === "" ||  manualSection.style.display === "none"){
+        manualSection.style.display = "block";
+        autoSection.style.display = "none";
     } else {
-        autoInput(clicked, input)
-    }
+        manualSection.style.display = "none";
+        autoSection.style.display = "block";
+    }   
 }
-
-
-function manualActivities(submitted){
-    if (submitted === "mNappy"){
-        manualNappyActivity(submitted)
-        time = document.getElementById("pottyTime").value;
-        console.log("potty path "+time);
-    } else if( submitted === "mFood"){
-        time = document.getElementById("foodTime").value;
-        console.log("food time " + time);
-    }else if( submitted === "mSleep"){
-        let stime = document.getElementById("sTime").value;
-        let ftime = document.getElementById("fTime").value;
-        console.log("sleep " +stime+" or "+ftime);
-    }
-}
-// submit refreshes the page too quickly, need to be delayed somehow
-
-
-function manualNappyActivity(submitted){
-    const one = document.querySelector("#no1").checked;
-    const noTwo = document.querySelector("#no2").checked;
-    console.log(one+" "+noTwo)
-    // returns true/false can be added directly to file like that
-}
-
-    
-function autoInput(activity, input){
-    if (activity === "food"){
-        console.log(`input is ${input} and ${activity}`);
-    } else if (activity === "num1" || activity === "num2"){
-        console.log(`input is ${input} and ${activity}`);
-    } else if (activity=== "napStart" || activity === "napFinish"){
-        console.log(`input is ${input} and ${activity}`);
-    }
-}
-

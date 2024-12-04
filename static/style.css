@@ -67,6 +67,11 @@ a{
   display: none;
 }
 
+
+#autoInput{
+  display: block;
+}
+
 #eatingBaby{
   width: 20%;
 }
@@ -79,9 +84,6 @@ a{
   width: 15%;
 }
 
-/* #manualInput{
-  display: block
-} */
 
 #food{
   margin-left: 40%;

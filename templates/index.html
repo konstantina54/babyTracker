@@ -21,9 +21,17 @@
                 <h2 id = 'todayDate'></h2>
                 <h2 id = 'todayTime'></h2>
                 <h3><button type="button" onclick="activity()" id ="manualLog">Log Manual Activity</button></h3>
+                <!-- restructure manual section to have calendar input and two clocks and just buttons with id to retreave the data -->
             </div>
             <div id = 'manualInput'>
                 <div class="manualSections">
+                    <form action="/submit" method="POST">
+                    <label for="start">Select Activity and Time:</label>
+                    <input type="date" id="manualCalendar" name="manualCalendar" value=""/>
+                    <input type="time" id="manualStartTime" value = "" name="manualStartTime"> 
+                    <input type="time" id="manualFinishTime" value = "" name="manualFinishTime"> 
+                    <button type="submit">Submit</button>
+                    </form>
                     <h2>Feeding Times </h2>
                     <form action="/submit" method="POST">
                     <!-- <form action="/" onsubmit="manualActivities(this.id)" id = "mFood"> -->

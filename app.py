@@ -8,9 +8,22 @@ from datetime import datetime
 app = Flask(__name__)
 
 
+def display_data():
+    f = open("test.txt", "r")
+    print(f.read())
+    # auto_data = f.find("AutoInput")
+    # if auto_data > 0:
+        # else:
+        #     date = 
+
+
+
+
+
 @app.route('/')
 def index():
     check = "testing please show!"
+    display_data()
     return render_template('index.html', check = check)
 
 
@@ -40,9 +53,7 @@ def collect_form_data():
                 fd.write(f'\n {manual_date} {form_data} ManualInput')
     # Print form data to the console (for debugging)
     print("Received form data:", form_data)
-
     return render_template('index.html', check = "will do later")
-
 
 
 if __name__ == "__main__":

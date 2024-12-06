@@ -20,5 +20,5 @@ function activity(){
     } else {
         manualSection.style.display = "none";
         autoSection.style.display = "block";
-    }   
+     }   
 }

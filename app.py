@@ -1,6 +1,7 @@
 from flask import Flask
 from flask import redirect, url_for, request, render_template, jsonify
 from datetime import datetime
+import json
 
 
 
@@ -9,12 +10,32 @@ app = Flask(__name__)
 
 
 def display_data():
-    f = open("test.txt", "r")
-    print(f.read())
-    # auto_data = f.find("AutoInput")
-    # if auto_data > 0:
-        # else:
-        #     date = 
+   with open('test.txt', 'r') as file:
+    # Read each line in the file
+    for line in file:
+        date = ""
+        time = ""
+        activity = ""
+
+        manual_data = line.find("ManualInput")
+        if manual_data > 1:
+            # print(line.strip())
+            start_json = line.find("{")
+            last_json = line.find(" M")
+            manual_inputs = line[start_json:last_json]
+            x = manual_inputs.replace("'", "\"")
+            res = json.loads(x)
+            print(str(res))
+            print(type(res))
+        elif (line.find("AutoInput") > 1):
+            # 2024-12-09 16:06:06 food AutoInput
+            auto_data = line.replace(" AutoInput", "")           
+            y = auto_data.split(" ")
+            print(y)
+            # res1 = json.loads(y)
+            # print(str(res1))
+            # print(type(res1))
+
 
 
 
@@ -22,7 +43,7 @@ def display_data():
 
 @app.route('/')
 def index():
-    check = "testing please show!"
+    check = "Results"
     display_data()
     return render_template('index.html', check = check)
 
@@ -34,6 +55,7 @@ def collect_form_data():
     """
     # Get form data
     form_data = request.form.to_dict()
+    print("Received form data:", form_data)
     # on any submit get the current time?
 
     # Get current datetime
@@ -52,8 +74,7 @@ def collect_form_data():
             with open('test.txt', 'a') as fd:
                 fd.write(f'\n {manual_date} {form_data} ManualInput')
     # Print form data to the console (for debugging)
-    print("Received form data:", form_data)
-    return render_template('index.html', check = "will do later")
+    return render_template('index.html', check = "results to displa maybe button?")
 
 
 if __name__ == "__main__":

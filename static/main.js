@@ -8,7 +8,7 @@ document.getElementById("todayTime").innerHTML = `Time: ${hours}:${minutes}`;
 // Display previous inputs below the submit button
 
 const manualSection = document.getElementById("manualInput");
-const autoSection = document.getElementsById("autoInput");
+const autoSection = document.getElementById("autoInput");
 
 
 function activity(){
@@ -22,3 +22,4 @@ function activity(){
         autoSection.style.display = "block";
      }   
 }
+

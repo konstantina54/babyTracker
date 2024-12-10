@@ -9,7 +9,7 @@ document.getElementById("todayTime").innerHTML = `Time: ${hours}:${minutes}`;
 
 const manualSection = document.getElementById("manualInput");
 const autoSection = document.getElementById("autoInput");
-
+// add filters and sorting for the table
 
 function activity(){
     const currentTime = `${hours}:${minutes}`

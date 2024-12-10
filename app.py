@@ -27,14 +27,18 @@ def display_data():
             res = json.loads(x)
             print(str(res))
             print(type(res))
+            date = res['manualCalendar']
+            time = y[1]
+            activity = y[2]
         elif (line.find("AutoInput") > 1):
             # 2024-12-09 16:06:06 food AutoInput
             auto_data = line.replace(" AutoInput", "")           
             y = auto_data.split(" ")
             print(y)
-            # res1 = json.loads(y)
-            # print(str(res1))
-            # print(type(res1))
+            date = y[0]
+            time = y[1]
+            activity = y[2]
+            
 
 
 

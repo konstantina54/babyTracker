@@ -13,10 +13,6 @@ def display_data():
    with open('test.txt', 'r') as file:
     # Read each line in the file
     for line in file:
-        date = ""
-        time = ""
-        activity = ""
-
         manual_data = line.find("ManualInput")
         if manual_data > 1:
             # print(line.strip())
@@ -27,20 +23,32 @@ def display_data():
             res = json.loads(x)
             print(str(res))
             print(type(res))
+            clean_manual_data(res)
             date = res['manualCalendar']
-            time = y[1]
-            activity = y[2]
         elif (line.find("AutoInput") > 1):
             # 2024-12-09 16:06:06 food AutoInput
             auto_data = line.replace(" AutoInput", "")           
-            y = auto_data.split(" ")
-            print(y)
-            date = y[0]
-            time = y[1]
-            activity = y[2]
+            # data = auto_data.split(" ")
+            clean_automated_data(auto_data)
+            # cleaned_data = [[row[0], row[1], row[2].strip()] for row in data]
+            # print(auto_data)
+           
             
 
+def clean_manual_data(data):
 
+    for key, value in data.items():
+        print(f"  {key}: {value}")
+
+
+def clean_automated_data(data):
+    parts = data.split(" ", 2)  # Split into up to 3 parts: date, time, and activity
+    date, time, activity = parts  # Unpack into variables
+
+    # Print the variables
+    print(f"Date: {date}")
+    print(f"Time: {time}")
+    print(f"Activity: {activity}")
 
 
 

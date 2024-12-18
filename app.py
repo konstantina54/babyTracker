@@ -4,8 +4,6 @@ from datetime import datetime
 import json
 
 
-
-
 app = Flask(__name__)
 
 
@@ -36,9 +34,39 @@ def display_data():
             
 
 def clean_manual_data(data):
+    date = data['manualCalendar']
 
-    for key, value in data.items():
-        print(f"  {key}: {value}")
+    # Define rules for grouping
+    rules = {
+        "number_related": ["number"],
+        "nap_related": ["nap"],
+    }
+
+    # Standardize groups
+    groups = standardize_groups(data, rules)
+
+    # Print results
+    for group_name, group_data in groups.items():
+        print(f"{group_name}: {group_data}")
+
+            
+
+def standardize_groups(data, rules):
+    groups = {key: [] for key in rules.keys()}
+    groups["others"] = []  # Default group for unmatched entries
+
+    for entry in data:
+        matched = False
+        for group, keywords in rules.items():
+            if any(keyword in entry['activity'].lower() for keyword in keywords):
+                groups[group].append(entry)
+                matched = True
+                break
+        if not matched:
+            groups["others"].append(entry)
+
+    return groups            
+
 
 
 def clean_automated_data(data):
@@ -49,6 +77,7 @@ def clean_automated_data(data):
     print(f"Date: {date}")
     print(f"Time: {time}")
     print(f"Activity: {activity}")
+    return date, time, activity
 
 
 

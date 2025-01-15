@@ -13,16 +13,17 @@ def display_data():
     for line in file:
         manual_data = line.find("ManualInput")
         if manual_data > 1:
+            data = clean_manual_data(line)
             # print(line.strip())
-            start_json = line.find("{")
-            last_json = line.find(" M")
-            manual_inputs = line[start_json:last_json]
-            x = manual_inputs.replace("'", "\"")
-            res = json.loads(x)
-            print(str(res))
-            print(type(res))
-            clean_manual_data(res)
-            date = res['manualCalendar']
+            # start_json = line.find("{")
+            # last_json = line.find(" M")
+            # manual_inputs = line[start_json:last_json]
+            # x = manual_inputs.replace("'", "\"")
+            # res = json.loads(x)
+            # print(str(res))
+            # print(type(res))
+            # # clean_manual_data(res)
+            # date = res['manualCalendar']
         elif (line.find("AutoInput") > 1):
             # 2024-12-09 16:06:06 food AutoInput
             auto_data = line.replace(" AutoInput", "")           
@@ -34,38 +35,33 @@ def display_data():
             
 
 def clean_manual_data(data):
-    date = data['manualCalendar']
+    start_json = data.find("{")
+    last_json = data.find(" M")
+    manual_inputs = data[start_json:last_json]
+    manual_inputs = manual_inputs.replace("'", "\"")
+    res = json.loads(manual_inputs)
+    print(str(res))
+    print(type(res))
+    date = res['manualCalendar']
+    if 'sTime' in res:
+        finish = string_to_time(res['fTime'])
+        start = string_to_time(res['sTime'])
+        sleep_duration = finish - start
+        print(sleep_duration)
 
-    # Define rules for grouping
-    rules = {
-        "number_related": ["number"],
-        "nap_related": ["nap"],
-    }
 
-    # Standardize groups
-    groups = standardize_groups(data, rules)
+def string_to_time(res):
+    # Split the string into hours and minutes
+    hours, minutes = map(int, res.split(':'))
 
-    # Print results
-    for group_name, group_data in groups.items():
-        print(f"{group_name}: {group_data}")
+    # Convert to total minutes since midnight
+    total_minutes = hours * 60 + minutes
 
-            
+    # Update the dictionary
+    res = total_minutes
+    return res
 
-def standardize_groups(data, rules):
-    groups = {key: [] for key in rules.keys()}
-    groups["others"] = []  # Default group for unmatched entries
-
-    for entry in data:
-        matched = False
-        for group, keywords in rules.items():
-            if any(keyword in entry['activity'].lower() for keyword in keywords):
-                groups[group].append(entry)
-                matched = True
-                break
-        if not matched:
-            groups["others"].append(entry)
-
-    return groups            
+          
 
 
 

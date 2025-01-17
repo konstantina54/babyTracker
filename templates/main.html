@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="description" content="This is where your description goes">
+    <meta name="keywords" content="one, two, three">
+    <title>Baby Activity Tracker</title>
+    <link rel="stylesheet" href="static/style.css" type="text/css">
+    <link rel="shortcut icon" href="#">
+</head>
+<body>
+    <h1>Baby Tracker</h1>
+    <img src="static/CuteBaby.jpg" alt="Your little bundle of joy">
+    <div id="mainSection">
+        <!-- Manual Input Section -->
+        <div id="manualInput">
+            <h2>Manual Activities</h2>
+
+            <!-- Feeding Manual -->
+            <div class="manualSections">
+                <h3>Feeding Time</h3>
+                <form action="/submit" method="POST">
+                    <input type="hidden" name="type" value="feeding">
+                    <input type="hidden" name="source" value="manual">
+                    <label for="manualFeedingDate">Date:</label>
+                    <input type="date" id="manualFeedingDate" name="date" required>
+                    <label for="manualFeedingTime">Time:</label>
+                    <input type="time" id="manualFeedingTime" name="time" required>
+                    <button type="submit">Submit</button>
+                </form>
+            </div>
+
+            <!-- Sleeping Manual -->
+            <div class="manualSections">
+                <h3>Sleeping Time</h3>
+                <form action="/submit" method="POST">
+                    <input type="hidden" name="type" value="sleeping">
+                    <input type="hidden" name="source" value="manual">
+                    <label for="manualSleepingDate">Date:</label>
+                    <input type="date" id="manualSleepingDate" name="date" required>
+                    <label for="manualSleepingStart">Start Time:</label>
+                    <input type="time" id="manualSleepingStart" name="start" required>
+                    <label for="manualSleepingEnd">End Time:</label>
+                    <input type="time" id="manualSleepingEnd" name="end" required>
+                    <button type="submit">Submit</button>
+                </form>
+            </div>
+
+            <!-- Nappy Manual -->
+            <div class="manualSections">
+                <h3>Nappy Time</h3>
+                <form action="/submit" method="POST">
+                    <input type="hidden" name="type" value="nappy">
+                    <input type="hidden" name="source" value="manual">
+                    <label for="manualNappyDate">Date:</label>
+                    <input type="date" id="manualNappyDate" name="date" required>
+                    <label for="manualNappyTime">Time:</label>
+                    <input type="time" id="manualNappyTime" name="time" required>
+                    <label for="manualNappyActivity">Activity:</label><br>
+                    <input type="checkbox" id="manualNappyNo1" name="activity" value="no1">
+                    <label for="manualNappyNo1"> No 1</label><br>
+                    <input type="checkbox" id="manualNappyNo2" name="activity" value="no2">
+                    <label for="manualNappyNo2"> No 2</label><br>
+                    <button type="submit">Submit</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Auto Input Section -->
+        <div id="autoInput">
+            <h2>Auto Activities</h2>
+
+            <!-- Feeding Auto -->
+            <div class="sections">
+                <h3>Feeding Time</h3>
+                <form action="/submit" method="POST">
+                    <input type="hidden" name="source" value="auto">
+                    <button type="submit" name="auto.food">Submit</button>
+                </form>
+            </div>
+
+            <!-- Sleeping Auto -->
+            <div class="sections">
+                <h3>Sleeping Time</h3>
+                <form action="/submit" method="POST">
+                    <input type="hidden" name="type" value="sleeping">
+                    <input type="hidden" name="source" value="auto">
+                    <button type="submit" name="auto.startNap">Start Nap</button>
+                    <button type="submit" name="auto.finishNap">Finish Nap</button>
+                </form>
+            </div>
+
+            <!-- Nappy Auto -->
+            <div class="sections">
+                <h3>Nappy Time</h3>
+                <form action="/submit" method="POST">
+                    <input type="hidden" name="type" value="nappy">
+                    <input type="hidden" name="source" value="auto">
+                    <button type="submit" name="auto.number1">No 1 Done</button>
+                    <button type="submit" name="auto.number2">No 2 Done</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -69,26 +69,27 @@
                     <img src="static/babyEating.jpg" id = "eatingBaby" alt="Food">
                     <h2>Feeding Times </h2>
                     <form action="/submit" method="POST">
-                    <button type="submit" id = "food" name = "auto.food">Submit</button>
-                    <!-- <button type="button" onclick="activity(this.id)" id = "food">Food Done</button> -->
+                        <!-- <input type="time" id="foodTime" value = "" name="foodTime"> -->
+                        <input type="hidden" name="AutoCalendar">
+                        <button type="submit" name="foodTime">Submit</button>
                     </form>
                 </div>
                 <div class="sections">
                     <img src="static/sleepingBaby.avif" id = "sleepingBaby" alt="sleeping">
                     <h2>Sleeping Time </h2>
                     <form action="/submit" method="POST" id = sleepTimes>
-                    <button type="submit" id = "startNap" name = "auto.startNap">Submit</button>
-                    <button type="submit" id = "finishNap" name = "auto.finishNap">Submit</button>
-                    <!-- <button type="button" onclick="activity(this.id)" id = "napStart">Starting Nap</button>
-                    <button type="button" onclick="activity(this.id)" id = "napFinish">Finishing Nap</button> -->
+                    <input type="hidden" name="AutoCalendar">
+                    <button type="submit" id = "startNap" name = "sTime">Strt</button>
+                    <button type="submit" id = "finishNap" name = "fTime">Finish</button>
                     </form>
                 </div>
                 <div class="sections">
                     <img src="static/nappy.png" id = "nappyB" alt="nappy">
                     <h2>Nappy time </h2>
                     <form action="/submit" method="POST">
-                    <button type="submit" id = "number1" name = "auto.number1">No 1 Done</button>
-                    <button type="submit" id = "number2" name = "auto.number2">No 2 Done</button>
+                    <input type="hidden" name="AutoCalendar">
+                    <button type="submit" id = "number1" name = "no1" value = "on">No 1 Done</button>
+                    <button type="submit" id = "number2" name = "no2" value = "on">No 2 Done</button>
                     </form>
                 </div>
             </div>
@@ -109,16 +110,6 @@
                         <td>{{ time }}</td>
                         <td>{{ activity }}</td>
                     </tr>
-                    <!-- <tr>
-                        <td>2024-12-09</td>
-                        <td>12:30 PM</td>
-                        <td>Lunch Break</td>
-                    </tr>
-                    <tr>
-                        <td>2024-12-09</td>
-                        <td>3:00 PM</td>
-                        <td>Project Review</td>
-                    </tr> -->
                 </tbody>
             </table>
 

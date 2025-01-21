@@ -2,6 +2,7 @@ from flask import Flask
 from flask import redirect, url_for, request, render_template, jsonify
 from datetime import datetime
 import json
+import pandas as pd
 
 
 app = Flask(__name__)
@@ -10,38 +11,31 @@ app = Flask(__name__)
 def display_data():
    with open('test.txt', 'r') as file:
     # Read each line in the file
+        # df = pd.DataFrame(file)
+        # print(df)
     for line in file:
-        # manual_data = line.find("ManualInput")
-        # if manual_data > 1:
+        # print(line)
         data = clean_manual_data(line)
-        # elif (line.find("AutoInput") > 1):
-        #     # 2024-12-09 16:06:06 food AutoInput
-        #     auto_data = line.replace(" AutoInput", "")           
-            # data = auto_data.split(" ")
-            # clean_automated_data(auto_data)
-            # cleaned_data = [[row[0], row[1], row[2].strip()] for row in data]
-            # print(auto_data)
+
            
             
 
 def clean_manual_data(data):
-    print(data + "this")
-    # start_json = data.find("{")
-    # if data.find(" M") >0:
-    #     manual_inputs = data[start_json:last_json]
-    # else data.find(" A") >0
-    #    manual_inputs = data[start_json:last_json]
-
-    # last_json = data.find(" M")
-    # last_json = data.find(" A")
-    manual_inputs = dict_str
-    manual_inputs = manual_inputs.replace("'", "\"")
-    # manual_inputs = manual_inputs.replace(" AutoInput", "")
-    # manual_inputs = manual_inputs.replace(" ManualInput", "")
+    # print(data + "this")
+    start_json = data.find("{")
+    if data.find(" M") >0:
+        last_json = data.find(" M")
+        manual_inputs = data[start_json:last_json]
+    elif data.find(" A") >0:
+        last_json = data.find(" A")
+        manual_inputs = data[start_json:last_json]
     print(manual_inputs)
-    # res = json.loads(manual_inputs)
-    # print(str(res))
-    # print(type(res))
+    manual_inputs = manual_inputs.replace("'", '"')
+    res = json.loads(manual_inputs)
+    print(str(res))
+    print(type(res))
+    # date time activity
+
     # print(f"Date: {res['manualCalendar']}")
     # if 'sTime' in res:
     #     time_difference = calculate_time_difference(res['sTime'], res['fTime'])
@@ -114,17 +108,28 @@ def collect_form_data():
     datetime_string = current_datetime.strftime('%Y-%m-%d %H:%M:%S')
     date = current_datetime.strftime('%Y-%m-%d')
     activity = ''
+    transformed = ''
 # Need to change the transformed dict to include the potty activity and also to be able to do the sleeping activity
     if 'AutoCalendar' in form_data:
-        if 'foodTime' in key:
+        if 'foodTime' in form_data:
             activity = 'foodTime'
-        elif 'no1' in key or 'no2' in key:
+            transformed = f"{date} {{'manualCalendar': '{date}', '{activity}': '{current_time}'}}"
+        elif 'no1' in form_data or 'no2' in form_data or 'both' in form_data:
             activity = 'pottyTime'
-
+            if 'both' in form_data:
+                print("it runs")
+                transformed = f"{date}{{'manualCalendar': '{date}', '{activity}': '{current_time}', 'no1': 'on', 'no2': 'on'}}"
+            elif 'no1' in form_data:
+                transformed = f"{date}{{'manualCalendar': '{date}', '{activity}': '{current_time}', 'no1': '{form_data['no1']}'}}"
+            elif 'no2' in form_data:
+                transformed = f"{date}{{'manualCalendar': '{date}', '{activity}': '{current_time}', 'no2': '{form_data['no2']}'}}"
         else: 
-            activity = 'sleepTime'
-
-        transformed = f"{date} {{'manualCalendar': '{date}', '{activity}': '{current_time}'}}"
+            if 'sTime' in form_data:
+                activity = 'sTime'
+                transformed = f"{date}{{'manualCalendar': '{date}', '{activity}': '{current_time}'}}"
+            elif 'fTime' in form_data:
+                activity = 'fTime'
+                transformed = f"{date}{{'manualCalendar': '{date}', '{activity}': '{current_time}'}}"
         with open('test.txt', 'a') as fd:
             fd.write(f'\n{transformed} AutoInput') 
     else:

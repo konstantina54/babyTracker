@@ -3,6 +3,7 @@ from flask import redirect, url_for, request, render_template, jsonify
 from datetime import datetime
 import json
 import pandas as pd
+# from functios import display_data, clean_manual_data
 
 
 app = Flask(__name__)
@@ -23,14 +24,6 @@ def display_data():
 
 def clean_manual_data(data):
     print(data + "this")
-    # start_json = data.find("{")
-    # if data.find(", I ") >0:
-    #     last_json = data.find("} ")
-    #     manual_inputs = data[start_json:last_json]
-    # elif data.find(" A") >0:
-    #     last_json = data.find(" A")
-    #     manual_inputs = data[start_json:last_json]
-    # print(manual_inputs)
     data = data.replace("'", '"')
     # manual_inputs = manual_inputs.replace("'", '"')
     activity_data = json.loads(data)
@@ -126,19 +119,16 @@ def collect_form_data():
         elif 'no1' in form_data or 'no2' in form_data or 'both' in form_data:
             activity = 'pottyTime'
             if 'both' in form_data:
-                print("it runs")
                 transformed = f"{{'manualCalendar': '{date}', '{activity}': '{current_time}', 'no1': 'on', 'no2': 'on', 'InputType' : 'Auto'}}"
             elif 'no1' in form_data:
                 transformed = f"{{'manualCalendar': '{date}', '{activity}': '{current_time}', 'no1': '{form_data['no1']}', 'InputType' : 'Auto'}}"
             elif 'no2' in form_data:
                 transformed = f"{{'manualCalendar': '{date}', '{activity}': '{current_time}', 'no2': '{form_data['no2']}', 'InputType' : 'Auto'}}"
-        else: 
-            if 'sTime' in form_data:
-                activity = 'sTime'
-                transformed = f"{{'manualCalendar': '{date}', '{activity}': '{current_time}', 'fTime':'', 'InputType' : 'Auto'}}"
-            elif 'fTime' in form_data:
-                activity = 'fTime'
-                transformed = f"{{'manualCalendar': '{date}', '{activity}': '{current_time}', 'sTime':'', 'InputType' : 'Auto'}}"
+        else:
+            # if sTime create the line but wait until fTime is triggered and add to the line the time. Then add to file. Check if ftime is after stime 
+            if 'sTime' in form_data or 'fTime' in form_data:
+                transformed = nap_length(form_data)
+
         with open('test.txt', 'a') as fd:
             fd.write(f'\n{transformed}') 
     else:
@@ -211,6 +201,44 @@ def reorganise_data(data):
         organised_data.append({'Date': date, 'Time': time, 'Activity': activity, 'Other': other})
     return organised_data
         
+
+def nap_length(activity):
+    if not hasattr(nap_length, "datetime_start"):
+        nap_length.datetime_start = None
+        nap_length.start_time = None
+
+    # Button press logic
+    if 'sTime' in activity:  # Start time button pressed
+        nap_length.datetime_start = datetime.now()
+        nap_length.start_time = f"{nap_length.datetime_start.hour}:{nap_length.datetime_start.minute:02d}"
+        print(f"Start time recorded: {nap_length.start_time}")
+         # Start time set, waiting for finish time
+
+    elif 'fTime' in activity:  # Finish time button pressed
+        if nap_length.datetime_start is None:  # Check if start time exists
+            print("Error: Start time not set.")
+        
+
+        datetime_finish = datetime.now()
+        finish_time = f"{datetime_finish.hour}:{datetime_finish.minute:02d}"
+
+        if datetime_finish > nap_length.datetime_start:  # Validate time order
+            date = datetime_finish.date()
+            transformed = {
+                "manualCalendar": str(date),
+                "sTime": nap_length.start_time,
+                "fTime": finish_time,
+                "InputType": "Auto"
+            }
+            print(f"Nap data recorded: {transformed}")
+            # Reset start time for the next activity
+            nap_length.datetime_start = None
+            nap_length.start_time = None
+            return transformed
+        else:
+            print("Error: Finish time must be after start time.")
+    else:
+        print("Invalid button pressed. Use 'sTime' or 'fTime'.")
 
 
 

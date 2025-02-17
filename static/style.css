@@ -80,6 +80,13 @@ body{
   width: 15%;
 }
 
+#results{
+  background: lightgray;
+  border: 1px solid black;
+  padding: 2px;
+  text-decoration: none;
+  color: black;
+}
 
 #food{
   margin-left: 40%;

@@ -1,12 +1,14 @@
 from flask import Flask
-from flask import redirect, url_for, request, render_template, jsonify
+from flask import redirect, url_for, request, render_template, jsonify, flash
 from datetime import datetime
 import json
+import os
 import pandas as pd
 # from functios import display_data, clean_manual_data
 
 
 app = Flask(__name__)
+app.secret_key = os.urandom(24)
 
 
 def display_data():
@@ -23,40 +25,51 @@ def display_data():
             
 
 def clean_manual_data(data):
-    print(data + "this")
     data = data.replace("'", '"')
     # manual_inputs = manual_inputs.replace("'", '"')
-    activity_data = json.loads(data)
-    return activity_data
-
-
-
-def display_formating(activity_data):
-    print(str(activity_data))        
-    # print(type(activity_data))
-    # date time activity
-    date = activity_data['manualCalendar']
-    if 'sTime' in activity_data:
-        if len(activity_data["fTime"]) > 0 and len(activity_data["sTime"]) > 0:
-            time_difference = calculate_time_difference(activity_data['sTime'], activity_data['fTime'])
-            # print(f"Date: {activity_data['manualCalendar']}")
-            print(f"Time: {time_difference}")
-            print(f"Activity: Nap Time")
-
-
-    elif 'foodTime' in activity_data:
-        # print(f"Date: {activity_data['manualCalendar']}")
-        print(f"Time: {activity_data['foodTime']}")
-        print(f"Activity: Food Time")
+    if not data.strip():
+        print("error")
     else:
-        # print(f"Date: {activity_data['manualCalendar']}")
-        print(f"Time: {activity_data['pottyTime']}")
-        if 'no1' in activity_data  and 'no2' in activity_data:
-            print(f"Activity: Potty Activity no1 and no2")
-        elif 'no1' in activity_data:
-            print(f"Activity: Potty Activity no1")
-        else: 
-            print(f"Activity: Potty Activity no2")
+        activity_data = json.loads(data)
+        return activity_data
+
+
+def display_formating(activity_data):       
+    if not activity_data:
+        print("error")
+    else:
+        d = dict()
+        date = activity_data['manualCalendar']
+        if 'sTime' in activity_data:
+            if len(activity_data["fTime"]) > 0 and len(activity_data["sTime"]) > 0:
+                time_difference = calculate_time_difference(activity_data['sTime'], activity_data['fTime'])
+                # print(f"Date: {activity_data['manualCalendar']}")
+                d['note'] = time_difference
+                d['activity'] = 'Nap Time'
+                print(f"Time: {time_difference}")
+                print(f"Activity: Nap Time")
+
+
+        elif 'foodTime' in activity_data:
+            # print(f"Date: {activity_data['manualCalendar']}")
+            d['note'] = ''
+            d['activity'] = 'Food Time'
+            print(f"Time: {activity_data['foodTime']}")
+            print(f"Activity: Food Time")
+        else:
+            # print(f"Date: {activity_data['manualCalendar']}")
+            print(f"Time: {activity_data['pottyTime']}")
+            d['activity'] = 'Potty Action'
+            if 'no1' in activity_data  and 'no2' in activity_data:
+                d['note'] = 'Potty Activity no1 and no2'
+                print(f"Activity: Potty Activity no1 and no2")
+            elif 'no1' in activity_data:
+                d['note'] = 'Potty Activity no1'
+                print(f"Activity: Potty Activity no1")
+            else: 
+                d['note'] = 'Potty Activity no2'
+                print(f"Activity: Potty Activity no2")
+        return d
 
 
 def calculate_time_difference(start_time, end_time):
@@ -90,9 +103,8 @@ def calculate_time_difference(start_time, end_time):
 
 @app.route('/')
 def index():
-    check = "activity_dataults"
     display_data()
-    return render_template('index.html', check = check)
+    return render_template('index.html')
 
 
 @app.route('/submit', methods=['POST'])
@@ -125,17 +137,18 @@ def collect_form_data():
             elif 'no2' in form_data:
                 transformed = f"{{'manualCalendar': '{date}', '{activity}': '{current_time}', 'no2': '{form_data['no2']}', 'InputType' : 'Auto'}}"
         else:
-            # if sTime create the line but wait until fTime is triggered and add to the line the time. Then add to file. Check if ftime is after stime 
             if 'sTime' in form_data or 'fTime' in form_data:
-                transformed = nap_length(form_data)
+                x = nap_length(form_data)
+                if x is not None:
+                    transformed = x
 
         with open('test.txt', 'a') as fd:
-            fd.write(f'\n{transformed}') 
+                fd.write(f'\n{transformed}') 
     else:
         form_data['InputType'] = 'Manual'
         with open('test.txt', 'a') as fd:
             fd.write(f'\n{form_data}')
-    return render_template('index.html', check = "activity_dataults to displa maybe button?")
+    return render_template('index.html')
 
 
 @app.route('/second')
@@ -144,8 +157,6 @@ def index2():
     df = table_view()
     table_html = df.to_html(classes='table table-striped', index=False)
     return render_template('main.html',table=table_html)
-
-
 
 
 
@@ -191,14 +202,14 @@ def reorganise_data(data):
         elif 'sTime' in row and row['sTime']:
             time = row['sTime']
             activity = 'Start'
-        elif 'fTime' in row and row['fTime']:
-            time = row['fTime']
-            activity = 'Finish'
+        # elif 'fTime' in row and row['fTime']:
+        #     time = row['fTime']
+        #     activity = 'Finish'
         else:
             time = ''
             activity = 'Unknown'
 
-        organised_data.append({'Date': date, 'Time': time, 'Activity': activity, 'Other': other})
+        organised_data.append({'Date': date, 'Time': time, 'Activity': activity, 'Note': other})
     return organised_data
         
 
@@ -216,13 +227,13 @@ def nap_length(activity):
 
     elif 'fTime' in activity:  # Finish time button pressed
         if nap_length.datetime_start is None:  # Check if start time exists
-            print("Error: Start time not set.")
+            flash("Error: Start time not set.")
         
 
         datetime_finish = datetime.now()
         finish_time = f"{datetime_finish.hour}:{datetime_finish.minute:02d}"
 
-        if datetime_finish > nap_length.datetime_start:  # Validate time order
+        if nap_length.datetime_start is not None and datetime_finish > nap_length.datetime_start:  # Validate time order
             date = datetime_finish.date()
             transformed = {
                 "manualCalendar": str(date),
@@ -236,9 +247,13 @@ def nap_length(activity):
             nap_length.start_time = None
             return transformed
         else:
-            print("Error: Finish time must be after start time.")
-    else:
-        print("Invalid button pressed. Use 'sTime' or 'fTime'.")
+            flash("Error: Finish time must be after start time.", 'danger')
+            pass
+    # else:
+    #     # flash("Invalid button pressed. Use 'sTime' or 'fTime'.", 'danger')
+    #     # pass
+
+
 
 
 

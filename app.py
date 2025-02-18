@@ -13,13 +13,9 @@ app.secret_key = os.urandom(24)
 
 def display_data():
    with open('test.txt', 'r') as file:
-    # Read each line in the file
-        # df = pd.DataFrame(file)
-        # print(df)
     for line in file:
-        # print(line)
         data = clean_manual_data(line)
-        display_formating(data)
+        # display_formating(data)
 
            
             
@@ -34,68 +30,61 @@ def clean_manual_data(data):
         return activity_data
 
 
-def display_formating(activity_data):       
-    if not activity_data:
-        print("error")
-    else:
-        d = dict()
-        date = activity_data['manualCalendar']
-        if 'sTime' in activity_data:
-            if len(activity_data["fTime"]) > 0 and len(activity_data["sTime"]) > 0:
-                time_difference = calculate_time_difference(activity_data['sTime'], activity_data['fTime'])
-                # print(f"Date: {activity_data['manualCalendar']}")
-                d['note'] = time_difference
-                d['activity'] = 'Nap Time'
-                print(f"Time: {time_difference}")
-                print(f"Activity: Nap Time")
+# def display_formating(activity_data):       
+#     if not activity_data:
+#         print("error")
+#     else:
+#         d = dict()
+#         date = activity_data['manualCalendar']
+#         if 'sTime' in activity_data:
+#             if len(activity_data["fTime"]) > 0 and len(activity_data["sTime"]) > 0:
+#                 time_difference = calculate_time_difference(activity_data['sTime'], activity_data['fTime'])
+#                 # print(f"Date: {activity_data['manualCalendar']}")
+#                 d['note'] = time_difference
+#                 d['activity'] = 'Nap Time'
+#                 print(f"Time: {time_difference}")
+#                 print(f"Activity: Nap Time")
 
 
-        elif 'foodTime' in activity_data:
-            # print(f"Date: {activity_data['manualCalendar']}")
-            d['note'] = ''
-            d['activity'] = 'Food Time'
-            print(f"Time: {activity_data['foodTime']}")
-            print(f"Activity: Food Time")
-        else:
-            # print(f"Date: {activity_data['manualCalendar']}")
-            print(f"Time: {activity_data['pottyTime']}")
-            d['activity'] = 'Potty Action'
-            if 'no1' in activity_data  and 'no2' in activity_data:
-                d['note'] = 'Potty Activity no1 and no2'
-                print(f"Activity: Potty Activity no1 and no2")
-            elif 'no1' in activity_data:
-                d['note'] = 'Potty Activity no1'
-                print(f"Activity: Potty Activity no1")
-            else: 
-                d['note'] = 'Potty Activity no2'
-                print(f"Activity: Potty Activity no2")
-        return d
+#         elif 'foodTime' in activity_data:
+#             # print(f"Date: {activity_data['manualCalendar']}")
+#             d['note'] = ''
+#             d['activity'] = 'Food Time'
+#             print(f"Time: {activity_data['foodTime']}")
+#             print(f"Activity: Food Time")
+#         else:
+#             # print(f"Date: {activity_data['manualCalendar']}")
+#             print(f"Time: {activity_data['pottyTime']}")
+#             d['activity'] = 'Potty Action'
+#             if 'no1' in activity_data  and 'no2' in activity_data:
+#                 d['note'] = 'Potty Activity no1 and no2'
+#                 print(f"Activity: Potty Activity no1 and no2")
+#             elif 'no1' in activity_data:
+#                 d['note'] = 'Potty Activity no1'
+#                 print(f"Activity: Potty Activity no1")
+#             else: 
+#                 d['note'] = 'Potty Activity no2'
+#                 print(f"Activity: Potty Activity no2")
+#         return d
 
 
 def calculate_time_difference(start_time, end_time):
-    # Convert 'HH:MM' to total minutes since midnight
     def time_to_minutes(time_str):
         hours, minutes = map(int, time_str.split(':'))
         return hours * 60 + minutes
 
-    # Convert total minutes back to 'HH:MM'
     def minutes_to_time(total_minutes):
         hours = total_minutes // 60
         minutes = total_minutes % 60
         return f"{hours:02}:{minutes:02}"
-
-    # Calculate minutes for both times
     start_minutes = time_to_minutes(start_time)
     end_minutes = time_to_minutes(end_time)
 
-    # Compute the difference
     time_diff_minutes = end_minutes - start_minutes
 
-    # Handle cases where the end time is on the next day
     if time_diff_minutes < 0:
-        time_diff_minutes += 24 * 60  # Add 24 hours in minutes
+        time_diff_minutes += 24 * 60
 
-    # Return the difference in 'HH:MM' format
     return minutes_to_time(time_diff_minutes)      
 
 
@@ -166,6 +155,7 @@ def table_view():
         lines = file.readlines()
         # reorg = reorganise_data(lines)
         res = []
+        # date time activity note
         for line in lines:
             line = line.replace("'", '"')
             activity_data = json.loads(line)
@@ -184,8 +174,7 @@ def reorganise_data(data):
     for row in data:
         date = row.get('manualCalendar', '')
         other = ''
-        
-        # Extract time and activity details
+
         if 'foodTime' in row:
             time = row['foodTime']
             activity = 'Food'
@@ -199,12 +188,15 @@ def reorganise_data(data):
                     other = 'No1'
                 elif 'no2' in row:
                     other = 'No2'
-        elif 'sTime' in row and row['sTime']:
+        elif 'sTime' in row and row['sTime'] and row['fTime']:
             time = row['sTime']
-            activity = 'Start'
-        # elif 'fTime' in row and row['fTime']:
-        #     time = row['fTime']
-        #     activity = 'Finish'
+            activity = 'Nap'
+            start_time = datetime.strptime(row['sTime'], "%H:%M")
+            finish_time = datetime.strptime(row['fTime'], "%H:%M")
+            total_minutes = (finish_time - start_time).total_seconds() / 60
+            hours = int(total_minutes // 60)
+            minutes = int(total_minutes % 60)
+            other = f"{hours}.{minutes:02d} h"
         else:
             time = ''
             activity = 'Unknown'
@@ -218,15 +210,14 @@ def nap_length(activity):
         nap_length.datetime_start = None
         nap_length.start_time = None
 
-    # Button press logic
-    if 'sTime' in activity:  # Start time button pressed
+    if 'sTime' in activity: 
         nap_length.datetime_start = datetime.now()
         nap_length.start_time = f"{nap_length.datetime_start.hour}:{nap_length.datetime_start.minute:02d}"
         print(f"Start time recorded: {nap_length.start_time}")
-         # Start time set, waiting for finish time
 
-    elif 'fTime' in activity:  # Finish time button pressed
-        if nap_length.datetime_start is None:  # Check if start time exists
+
+    elif 'fTime' in activity:
+        if nap_length.datetime_start is None: 
             flash("Error: Start time not set.")
         
 

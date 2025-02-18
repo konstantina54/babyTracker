@@ -11,9 +11,14 @@
 <body>
     <h1>Baby Tracker</h1>
     <img src="static/CuteBaby.jpg" alt="Your little bundle of joy">
-    <div class="container mt-4">
-        <h1>Baby Activity</h1>
-        {{ table|safe }}
-    </div>
+        <div class="container mt-4">
+            <h1>Baby Activity</h1>
+            <input type="text" id="tableFilter" onkeyup="filterTable()" placeholder="Search for activities..." class="search-box">
+            <table id="activityTable">
+                <tbody>
+                    {{ table|safe }}
+                </tbody>
+            </table>
+        </div>
 </body>
 </html>

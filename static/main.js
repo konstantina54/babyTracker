@@ -23,3 +23,21 @@ function activity(){
      }   
 }
 
+
+function filterTable() {
+    let input = document.getElementById("tableFilter");
+    let filter = input.value.toLowerCase();
+    let table = document.getElementById("activityTable");
+    let rows = table.getElementsByTagName("tr");
+
+    for (let i = 0; i < rows.length; i++) {
+        let row = rows[i];
+        let text = row.textContent || row.innerText;
+
+        if (text.toLowerCase().indexOf(filter) > -1) {
+            row.style.display = "";
+        } else {
+            row.style.display = "none";
+        }
+    }
+}

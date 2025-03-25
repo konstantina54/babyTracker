@@ -6,3 +6,5 @@ node-modules
 server.js
 .DS_Store
 node_modules/
+__pycache__
+config.txt

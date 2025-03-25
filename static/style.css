@@ -80,7 +80,7 @@ body{
   width: 15%;
 }
 
-#results{
+#results, #back{
   background: lightgray;
   border: 1px solid black;
   padding: 2px;

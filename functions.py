@@ -8,11 +8,7 @@ import pandas as pd
 
 
 DB_CONFIG = {
-    "dbname": "baby_tracker",  # Replace with your database name
-    "user": "postgres",         # Replace with your username
-    "password": "Learner1",     # Replace with your password
-    "host": "localhost",             # Host, default is localhost
-    "port": "5432",                  # Default port for PostgreSQL
+
 }
 
 
@@ -201,7 +197,6 @@ def data_to_sql(form_data):
     # Get current datetime
     # needed for sql function activity_type, input_type, date, start_time, finish_time, note
     current_datetime = datetime.now()
-    # current_time = f"{current_datetime.hour}:{current_datetime.minute}"
     current_time = time.strftime("%H:%M:%S", time.localtime())
     # Convert to string and add to file
     datetime_string = current_datetime.strftime('%Y-%m-%d %H:%M:%S')
@@ -220,94 +215,87 @@ def data_to_sql(form_data):
             note = ' and '.join([key.capitalize() for key in ['no1', 'no2', 'both'] if key in form_data])
         else:
             if 'sTime' in form_data or 'fTime' in form_data:
+                # calculating nap start time and end time reformating for postgres
                 x = nap_length(form_data)
                 if x is not None:
-                    transformed = x
+                    activity_type = "sTime"
+                    input_type = 'auto'
+                    date = x['manualCalendar']
+                    current_time = x['sTime']
+                    finish_time = x['fTime']
         sql_new_entry(activity_type,input_type, date, current_time, finish_time, note)           
     else:
         input_type = 'manual'
+        date = form_data['manualCalendar']
+        if 'foodTime' in form_data:
+            activity_type = 'food'
+            start_time = form_data['foodTime']
+        elif any(key in form_data for key in ['no1', 'no2', 'both']):  
+            activity_type = 'potty'
+            start_time = form_data['pottyTime']
+            note = ' and '.join([key.capitalize() for key in ['no1', 'no2', 'both'] if key in form_data])
+        elif 'sTime' in form_data or 'fTime' in form_data:
+            activity_type = 'sTime'
+            start_time = form_data['sTime']
+            finish_time = form_data['fTime']
+
+    sql_new_entry(activity_type,input_type, date, current_time, finish_time, note)
 
 
 
 
-def sql_new_entry(activity, input_type, date, start_time, finish_time, note):
+
+def sql_new_entry(activity, input_type, date, start_time, finish_time = None, note = None):
     # establishing the connection
     print(activity, input_type, date, start_time, finish_time, note)
     DB_CONFIG = {
-    
+        "database":"baby_tracker",
+        'user':'postgres',
+        'password':'Learner1',
+        'host':'localhost',
+        'port':'5432'
     }
 
     ACTIVITY_MAP = {
-    "foodTime": 1,   # food
-    "sTime": 2,      # sleep
-    "pottyTime": 3   # potty
+    "food": 1,   # food
+    "sTime": 2,  # sleep
+    "potty": 3   # potty
     }
 
-    activity_type = None
-    for key, act_id in ACTIVITY_MAP.items():
-        if key == activity:
-            activity_type = act_id
-            print(activity_type)
-            break
-
-    if not activity_type:
-        print("Unknown activity type, skipping entry:", activity)
+    activity_type = ACTIVITY_MAP.get(activity)
+    if activity_type is None:
+        print(f"Unknown activity type '{activity}', skipping entry.")
         return
 
     try:
-    # Connect to PostgreSQL
+        # Connect to PostgreSQL
         conn = psycopg2.connect(**DB_CONFIG)
         cursor = conn.cursor()
-            # Insert data into 'main' table
+
+        # Insert data into 'main' table, allowing NULL values for finish_time and note
         cursor.execute(
             """
             INSERT INTO main (activity_type, input_type, date, time, finish_time, note)
             VALUES (%s, %s, %s, %s, %s, %s)
             """,
-            (activity_type, input_type, date, start_time, finish_time, note)
+            (activity_type, input_type, date, start_time, finish_time if finish_time else None, note if note else None)
         )
 
         # Commit and close connection
         conn.commit()
-        print("Data inserted successfully:", form_data)
+        print("Data inserted successfully!")
 
     except Exception as e:
         print("Error inserting data:", e)
+
     finally:
-        if cursor:
+        if 'cursor' in locals():
             cursor.close()
-        if conn:
+        if 'conn' in locals():
             conn.close()
 
 
 
-
-
-
-
-
-# # Database connection details
-# DB_CONFIG = {
-#     "dbname": "your_database",
-#     "user": "your_user",
-#     "password": "your_password",
-#     "host": "localhost",
-#     "port": "5432",
-# }
-
-# # Mapping input keys to activity IDs (as per predefined entries in 'activity' table)
-# ACTIVITY_MAP = {
-#     "foodTime": 1,   # food
-#     "sTime": 2,      # sleep
-#     "pottyTime": 3   # potty
-# }
-
-# def insert_activity_record(form_data):
-#     """Processes form data and inserts it into the 'main' table."""
-#     try:
-#         # Connect to PostgreSQL
-#         conn = psycopg2.connect(**DB_CONFIG)
-#         cursor = conn.cursor()
 
 
 

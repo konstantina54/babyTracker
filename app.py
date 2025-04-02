@@ -2,7 +2,8 @@ from flask import Flask
 from flask import redirect, render_template
 import os
 import pandas as pd
-from functions import display_data, clean_manual_data, table_view, reorganise_data, nap_length, calculate_time_difference, collect_form_data
+from functions import display_data, table_view, data_to_sql
+from postgres_commands import fetch_activity_data
 
 
 app = Flask(__name__)
@@ -19,16 +20,19 @@ def index():
 @app.route('/submit', methods=['POST'])
 def form_submit():
     """ any activity submit """
-    collect_form_data()
+    # collect_form_data()
+    data_to_sql()
     return render_template('index.html')
 
 
 @app.route('/second')
 def index2():
-    """ activity table """
-    df = table_view()
-    table_html = df.to_html(classes='table table-striped', index=False)
-    return render_template('main.html',table=table_html)
+    """ Renders activity table from PostgreSQL """
+    df = fetch_activity_data()  # Fetch data from the database
+    table_html = df.to_html(classes='table table-striped', index=False)  # Convert to HTML table
+    return render_template('main.html', table=table_html)  # Pass table to template
+
+
 
 
 

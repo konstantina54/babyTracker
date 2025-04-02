@@ -1,16 +1,23 @@
 from flask import Flask
 from flask import redirect, url_for, request, jsonify, flash
 from datetime import datetime
-import time
+import time, os
+from dotenv import load_dotenv
 import json
 import psycopg2
 import pandas as pd
 
 
-DB_CONFIG = {
 
+DB_CONFIG = {
+    "database": os.getenv("DB_NAME"),
+    "user": os.getenv("DB_USER"),
+    "password": os.getenv("DB_PASSWORD"),
+    "host": os.getenv("DB_HOST"),
+    "port": os.getenv("DB_PORT")
 }
 
+load_dotenv(override=True)
 
 def display_data():
     """Open file with collected activities"""
@@ -74,7 +81,7 @@ def table_view():
         return df2        
 
 
-def reorganise_data(data):
+# def reorganise_data(data):
     """ Transform data if unified form for collection in file"""
     organised_data = []
     for row in data:
@@ -112,89 +119,89 @@ def reorganise_data(data):
 
 
 
-def nap_length(activity):
+def nap_data_collected(activity):
     """ Making sure start nap button is pressed before finish and calculating time"""
-    if not hasattr(nap_length, "datetime_start"):
-        nap_length.datetime_start = None
-        nap_length.start_time = None
+    if not hasattr(nap_data_collected, "datetime_start"):
+        nap_data_collected.datetime_start = None
+        nap_data_collected.start_time = None
 
     if 'sTime' in activity: 
-        nap_length.datetime_start = datetime.now()
-        nap_length.start_time = f"{nap_length.datetime_start.hour}:{nap_length.datetime_start.minute:02d}"
-        print(f"Start time recorded: {nap_length.start_time}")
+        nap_data_collected.datetime_start = datetime.now()
+        nap_data_collected.start_time = f"{nap_data_collected.datetime_start.hour}:{nap_data_collected.datetime_start.minute:02d}"
+        print(f"Start time recorded: {nap_data_collected.start_time}")
 
 
     elif 'fTime' in activity:
-        if nap_length.datetime_start is None: 
+        if nap_data_collected.datetime_start is None: 
             flash("Error: Start time not set.")
         
 
         datetime_finish = datetime.now()
         finish_time = f"{datetime_finish.hour}:{datetime_finish.minute:02d}"
 
-        if nap_length.datetime_start is not None and datetime_finish > nap_length.datetime_start:  # Validate time order
+        if nap_data_collected.datetime_start is not None and datetime_finish > nap_data_collected.datetime_start:  # Validate time order
             date = datetime_finish.date()
             transformed = {
                 "manualCalendar": str(date),
-                "sTime": nap_length.start_time,
+                "sTime": nap_data_collected.start_time,
                 "fTime": finish_time,
                 "InputType": "Auto"
             }
             print(f"Nap data recorded: {transformed}")
             # Reset start time for the next activity
-            nap_length.datetime_start = None
-            nap_length.start_time = None
+            nap_data_collected.datetime_start = None
+            nap_data_collected.start_time = None
             return transformed
         else:
             flash("Error: Finish time must be after start time.", 'danger')
             pass
 
 
-def collect_form_data():
-    # Get form data
+# def collect_form_data():
+#     # Get form data
+#     form_data = request.form.to_dict()
+#     print("Received form data:", form_data)
+#     # on any submit get the current time?
+#     data_to_sql(form_data)
+#     # Get current datetime
+#     current_datetime = datetime.now()
+#     current_time = f"{current_datetime.hour}:{current_datetime.minute}"
+
+#     # Convert to string and add to file
+#     datetime_string = current_datetime.strftime('%Y-%m-%d %H:%M:%S')
+#     date = current_datetime.strftime('%Y-%m-%d')
+#     activity = ''
+#     transformed = ''
+#     if 'AutoCalendar' in form_data:
+#         if 'foodTime' in form_data:
+#             activity = 'foodTime'
+#             transformed = f"{{'manualCalendar': '{date}', '{activity}': '{current_time}', 'InputType' : 'Auto'}}"
+#         elif 'no1' in form_data or 'no2' in form_data or 'both' in form_data:
+#             activity = 'pottyTime'
+#             if 'both' in form_data:
+#                 transformed = f"{{'manualCalendar': '{date}', '{activity}': '{current_time}', 'no1': 'on', 'no2': 'on', 'InputType' : 'Auto'}}"
+#             elif 'no1' in form_data:
+#                 transformed = f"{{'manualCalendar': '{date}', '{activity}': '{current_time}', 'no1': '{form_data['no1']}', 'InputType' : 'Auto'}}"
+#             elif 'no2' in form_data:
+#                 transformed = f"{{'manualCalendar': '{date}', '{activity}': '{current_time}', 'no2': '{form_data['no2']}', 'InputType' : 'Auto'}}"
+#         else:
+#             if 'sTime' in form_data or 'fTime' in form_data:
+#                 x = nap_data_collected(form_data)
+#                 if x is not None:
+#                     transformed = x
+
+#         with open('test.txt', 'a') as fd:
+#                 fd.write(f'\n{transformed}') 
+#     else:
+#         form_data['InputType'] = 'Manual'
+#         with open('test.txt', 'a') as fd:
+#             fd.write(f'\n{form_data}')
+
+
+
+def data_to_sql():
     form_data = request.form.to_dict()
     print("Received form data:", form_data)
-    # on any submit get the current time?
-    data_to_sql(form_data)
-    # Get current datetime
-    current_datetime = datetime.now()
-    current_time = f"{current_datetime.hour}:{current_datetime.minute}"
-
-    # Convert to string and add to file
-    datetime_string = current_datetime.strftime('%Y-%m-%d %H:%M:%S')
-    date = current_datetime.strftime('%Y-%m-%d')
-    activity = ''
-    transformed = ''
-    if 'AutoCalendar' in form_data:
-        if 'foodTime' in form_data:
-            activity = 'foodTime'
-            transformed = f"{{'manualCalendar': '{date}', '{activity}': '{current_time}', 'InputType' : 'Auto'}}"
-        elif 'no1' in form_data or 'no2' in form_data or 'both' in form_data:
-            activity = 'pottyTime'
-            if 'both' in form_data:
-                transformed = f"{{'manualCalendar': '{date}', '{activity}': '{current_time}', 'no1': 'on', 'no2': 'on', 'InputType' : 'Auto'}}"
-            elif 'no1' in form_data:
-                transformed = f"{{'manualCalendar': '{date}', '{activity}': '{current_time}', 'no1': '{form_data['no1']}', 'InputType' : 'Auto'}}"
-            elif 'no2' in form_data:
-                transformed = f"{{'manualCalendar': '{date}', '{activity}': '{current_time}', 'no2': '{form_data['no2']}', 'InputType' : 'Auto'}}"
-        else:
-            if 'sTime' in form_data or 'fTime' in form_data:
-                x = nap_length(form_data)
-                if x is not None:
-                    transformed = x
-
-        with open('test.txt', 'a') as fd:
-                fd.write(f'\n{transformed}') 
-    else:
-        form_data['InputType'] = 'Manual'
-        with open('test.txt', 'a') as fd:
-            fd.write(f'\n{form_data}')
-
-
-
-def data_to_sql(form_data):
-    # form_data = request.form.to_dict()
-    # Get current datetime
     # needed for sql function activity_type, input_type, date, start_time, finish_time, note
     current_datetime = datetime.now()
     current_time = time.strftime("%H:%M:%S", time.localtime())
@@ -216,14 +223,13 @@ def data_to_sql(form_data):
         else:
             if 'sTime' in form_data or 'fTime' in form_data:
                 # calculating nap start time and end time reformating for postgres
-                x = nap_length(form_data)
+                x = nap_data_collected(form_data)
                 if x is not None:
                     activity_type = "sTime"
                     input_type = 'auto'
                     date = x['manualCalendar']
                     current_time = x['sTime']
                     finish_time = x['fTime']
-        sql_new_entry(activity_type,input_type, date, current_time, finish_time, note)           
     else:
         input_type = 'manual'
         date = form_data['manualCalendar']
@@ -238,7 +244,7 @@ def data_to_sql(form_data):
             activity_type = 'sTime'
             start_time = form_data['sTime']
             finish_time = form_data['fTime']
-
+            
     sql_new_entry(activity_type,input_type, date, current_time, finish_time, note)
 
 
@@ -248,51 +254,56 @@ def data_to_sql(form_data):
 def sql_new_entry(activity, input_type, date, start_time, finish_time = None, note = None):
     # establishing the connection
     print(activity, input_type, date, start_time, finish_time, note)
-    DB_CONFIG = {
-        "database":"baby_tracker",
-        'user':'postgres',
-        'password':'Learner1',
-        'host':'localhost',
-        'port':'5432'
-    }
+    # DB_CONFIG = {
+    #     "database":"baby_tracker",
+    #     'user':'postgres',
+    #     'password':'Learner1',
+    #     'host':'localhost',
+    #     'port':'5432'
+    # }
 
-    ACTIVITY_MAP = {
-    "food": 1,   # food
-    "sTime": 2,  # sleep
-    "potty": 3   # potty
-    }
+    # ACTIVITY_MAP = {
+    # "food": 1,   # food
+    # "sTime": 2,  # sleep
+    # "potty": 3   # potty
+    # }
 
-    activity_type = ACTIVITY_MAP.get(activity)
-    if activity_type is None:
-        print(f"Unknown activity type '{activity}', skipping entry.")
-        return
+    # activity_type = ACTIVITY_MAP.get(activity)
+    # if activity_type is None:
+    #     print(f"Unknown activity type '{activity}', skipping entry.")
+    #     return
 
-    try:
-        # Connect to PostgreSQL
-        conn = psycopg2.connect(**DB_CONFIG)
-        cursor = conn.cursor()
+    # try:
+    #     # Connect to PostgreSQL
+    #     conn = psycopg2.connect(**DB_CONFIG)
+    #     cursor = conn.cursor()
 
-        # Insert data into 'main' table, allowing NULL values for finish_time and note
-        cursor.execute(
-            """
-            INSERT INTO main (activity_type, input_type, date, time, finish_time, note)
-            VALUES (%s, %s, %s, %s, %s, %s)
-            """,
-            (activity_type, input_type, date, start_time, finish_time if finish_time else None, note if note else None)
-        )
+    #     # Insert data into 'main' table, allowing NULL values for finish_time and note
+    #     cursor.execute(
+    #         """
+    #         INSERT INTO main (activity_type, input_type, date, time, finish_time, note)
+    #         VALUES (%s, %s, %s, %s, %s, %s)
+    #         """,
+    #         (activity_type, input_type, date, start_time, finish_time if finish_time else None, note if note else None)
+    #     )
 
-        # Commit and close connection
-        conn.commit()
-        print("Data inserted successfully!")
+    #     # Commit and close connection
+    #     conn.commit()
+    #     print("Data inserted successfully!")
 
-    except Exception as e:
-        print("Error inserting data:", e)
+    # except Exception as e:
+    #     print("Error inserting data:", e)
 
-    finally:
-        if 'cursor' in locals():
-            cursor.close()
-        if 'conn' in locals():
-            conn.close()
+    # finally:
+    #     if 'cursor' in locals():
+    #         cursor.close()
+    #     if 'conn' in locals():
+    #         conn.close()
+
+    # activity_logs = fetch_activity_data()
+    # for entry in activity_logs:
+    #     print(f"📅 {entry['date']} ⏰ {entry['start_time']} 🏷 {entry['activity']} 📝 {entry['note']}")
+
 
 
 

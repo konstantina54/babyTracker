@@ -2,6 +2,8 @@ import psycopg2
 import pandas as pd
 import os
 from dotenv import load_dotenv
+from datetime import datetime
+from functions import calculate_duration
 
 # Load environment variables from .env file
 load_dotenv(override=True)
@@ -31,18 +33,27 @@ def fetch_activity_data():
 
         # SQL query to retrieve relevant data
         cursor.execute("""
-            SELECT date, time, activity_type, note FROM main ORDER BY date DESC;
+            SELECT date, time, activity_type, finish_time, note FROM main ORDER BY date DESC;
         """)
 
         # Fetch all records from the query
         records = cursor.fetchall()
 
         # Convert list of tuples into Pandas DataFrame
-        df = pd.DataFrame(records, columns=['Date', 'Start Time', 'Activity Type', 'Note'])
+        df = pd.DataFrame(records, columns=['Date', 'Start Time', 'Activity Type','Finish Time', 'Note'])
 
         # Convert activity type IDs to readable names
         df['Activity Type'] = df['Activity Type'].map(ACTIVITY_MAP)
+        # Only update notes for Sleep activities
+        sleep_mask = (df['Activity Type'] == "Sleep") & (df['Finish Time'].notna()) & (df['Start Time'].notna())
 
+        df.loc[sleep_mask, 'Note'] = df[sleep_mask].apply(
+            lambda row: calculate_duration(row['Start Time'], row['Finish Time']),
+            axis=1
+        )
+
+        # Drop Finish Time column
+        df.drop(columns=['Finish Time'], inplace=True)
         return df  
 
     except psycopg2.Error as e:
@@ -55,3 +66,4 @@ def fetch_activity_data():
             cursor.close()
         if 'conn' in locals() and conn:
             conn.close()
+

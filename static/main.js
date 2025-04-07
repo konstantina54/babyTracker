@@ -24,20 +24,20 @@ function activity(){
 }
 
 
-function filterTable() {
-    let input = document.getElementById("tableFilter");
-    let filter = input.value.toLowerCase();
-    let table = document.getElementById("activityTable");
-    let rows = table.getElementsByTagName("tr");
+function filterTableByActivity() {
+    const filter = document.getElementById("activityFilter").value.toLowerCase();
+    const table = document.getElementById("activityTable");
+    const rows = table.getElementsByTagName("tr");
 
-    for (let i = 0; i < rows.length; i++) {
-        let row = rows[i];
-        let text = row.textContent || row.innerText;
-
-        if (text.toLowerCase().indexOf(filter) > -1) {
-            row.style.display = "";
-        } else {
-            row.style.display = "none";
+    for (let i = 1; i < rows.length; i++) { // start from 1 to skip header
+        const activityCell = rows[i].getElementsByTagName("td")[2]; // 3rd column = Activity Type
+        if (activityCell) {
+            const activityText = activityCell.textContent || activityCell.innerText;
+            if (filter === "all" || activityText.toLowerCase() === filter) {
+                rows[i].style.display = "";
+            } else {
+                rows[i].style.display = "none";
+            }
         }
     }
 }

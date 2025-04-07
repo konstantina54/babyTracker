@@ -306,6 +306,24 @@ def sql_new_entry(activity, input_type, date, start_time, finish_time = None, no
 
 
 
+def calculate_duration(start_time_obj, finish_time_obj):
+    """Calculate time difference in hours and minutes between two datetime.time objects."""
+    try:
+        today = datetime.today().date()
+        start_dt = datetime.combine(today, start_time_obj)
+        finish_dt = datetime.combine(today, finish_time_obj)
+
+        # Handle overnight case
+        if finish_dt < start_dt:
+            finish_dt += timedelta(days=1)
+
+        duration = finish_dt - start_dt
+        total_minutes = int(duration.total_seconds() // 60)
+        hours = total_minutes // 60
+        minutes = total_minutes % 60
+        return f"{hours}h {minutes}m"
+    except Exception as e:
+        return f"Error: {e}"
 
 
 

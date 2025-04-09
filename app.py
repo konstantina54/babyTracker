@@ -2,7 +2,7 @@ from flask import Flask
 from flask import redirect, render_template
 import os
 import pandas as pd
-from functions import display_data, table_view, data_to_sql
+from functions import table_view, data_to_sql
 from postgres_commands import fetch_activity_data
 
 
@@ -13,7 +13,7 @@ app.secret_key = os.urandom(24)
 @app.route('/')
 def index():
     """ load main page """
-    display_data()
+    # display_data() 
     return render_template('index.html')
 
 
@@ -29,7 +29,7 @@ def form_submit():
 def index2():
     """ Renders activity table from PostgreSQL """
     df = fetch_activity_data()  # Fetch data from the database
-    table_html = df.to_html(classes='table table-striped', index=False)  # Convert to HTML table
+    table_html = df.to_html(classes='table table-striped', index=False, table_id= "activityTable")  # Convert to HTML table
     return render_template('main.html', table=table_html)  # Pass table to template
 
 

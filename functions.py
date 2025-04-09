@@ -6,7 +6,10 @@ from dotenv import load_dotenv
 import json
 import psycopg2
 import pandas as pd
+from postgres_commands import sql_new_entry
 
+# should I add ioption to update notes with random input?2. Fetching Logs for the Dashboard View
+# need to make sure the manual input is not date in the future. Block if the date is ahead
 
 
 DB_CONFIG = {
@@ -19,13 +22,12 @@ DB_CONFIG = {
 
 load_dotenv(override=True)
 
-def display_data():
-    """Open file with collected activities"""
-    with open('test.txt', 'r') as file:
-        for line in file:
-            # print(line)
-            data = clean_manual_data(line)
-            # display_formating(data)
+# def display_data():
+#     """Open file with collected activities"""
+#     with open('test.txt', 'r') as file:
+#         for line in file:
+#             data = clean_manual_data(line)
+#             # display_formating(data)
 
 
 def calculate_time_difference(start_time, end_time):
@@ -49,15 +51,15 @@ def calculate_time_difference(start_time, end_time):
 
 
 
-def clean_manual_data(data):
-    """ Transform data for display"""
-    data = data.replace("'", '"')
-    # manual_inputs = manual_inputs.replace("'", '"')
-    if not data.strip():
-        print("error")
-    else:
-        activity_data = json.loads(data)
-        return activity_data
+# def clean_manual_data(data):
+#     """ Transform data for display"""
+#     # used by the txt file. Is it really needed?
+#     data = data.replace("'", '"')
+#     if not data.strip():
+#         print("error")
+#     else:
+#         activity_data = json.loads(data)
+#         return activity_data
 
 
 
@@ -66,7 +68,6 @@ def table_view():
     with open('test.txt', 'r') as file:
         # read lines from the file
         lines = file.readlines()
-        # reorg = reorganise_data(lines)
         res = []
         # date time activity note
         for line in lines:
@@ -157,48 +158,6 @@ def nap_data_collected(activity):
             pass
 
 
-# def collect_form_data():
-#     # Get form data
-#     form_data = request.form.to_dict()
-#     print("Received form data:", form_data)
-#     # on any submit get the current time?
-#     data_to_sql(form_data)
-#     # Get current datetime
-#     current_datetime = datetime.now()
-#     current_time = f"{current_datetime.hour}:{current_datetime.minute}"
-
-#     # Convert to string and add to file
-#     datetime_string = current_datetime.strftime('%Y-%m-%d %H:%M:%S')
-#     date = current_datetime.strftime('%Y-%m-%d')
-#     activity = ''
-#     transformed = ''
-#     if 'AutoCalendar' in form_data:
-#         if 'foodTime' in form_data:
-#             activity = 'foodTime'
-#             transformed = f"{{'manualCalendar': '{date}', '{activity}': '{current_time}', 'InputType' : 'Auto'}}"
-#         elif 'no1' in form_data or 'no2' in form_data or 'both' in form_data:
-#             activity = 'pottyTime'
-#             if 'both' in form_data:
-#                 transformed = f"{{'manualCalendar': '{date}', '{activity}': '{current_time}', 'no1': 'on', 'no2': 'on', 'InputType' : 'Auto'}}"
-#             elif 'no1' in form_data:
-#                 transformed = f"{{'manualCalendar': '{date}', '{activity}': '{current_time}', 'no1': '{form_data['no1']}', 'InputType' : 'Auto'}}"
-#             elif 'no2' in form_data:
-#                 transformed = f"{{'manualCalendar': '{date}', '{activity}': '{current_time}', 'no2': '{form_data['no2']}', 'InputType' : 'Auto'}}"
-#         else:
-#             if 'sTime' in form_data or 'fTime' in form_data:
-#                 x = nap_data_collected(form_data)
-#                 if x is not None:
-#                     transformed = x
-
-#         with open('test.txt', 'a') as fd:
-#                 fd.write(f'\n{transformed}') 
-#     else:
-#         form_data['InputType'] = 'Manual'
-#         with open('test.txt', 'a') as fd:
-#             fd.write(f'\n{form_data}')
-
-
-
 def data_to_sql():
     form_data = request.form.to_dict()
     print("Received form data:", form_data)
@@ -246,86 +205,3 @@ def data_to_sql():
             finish_time = form_data['fTime']
             
     sql_new_entry(activity_type,input_type, date, current_time, finish_time, note)
-
-
-
-
-
-def sql_new_entry(activity, input_type, date, start_time, finish_time = None, note = None):
-    # establishing the connection
-    print(activity, input_type, date, start_time, finish_time, note)
-    # DB_CONFIG = {
-    #     "database":"baby_tracker",
-    #     'user':'postgres',
-    #     'password':'Learner1',
-    #     'host':'localhost',
-    #     'port':'5432'
-    # }
-
-    # ACTIVITY_MAP = {
-    # "food": 1,   # food
-    # "sTime": 2,  # sleep
-    # "potty": 3   # potty
-    # }
-
-    # activity_type = ACTIVITY_MAP.get(activity)
-    # if activity_type is None:
-    #     print(f"Unknown activity type '{activity}', skipping entry.")
-    #     return
-
-    # try:
-    #     # Connect to PostgreSQL
-    #     conn = psycopg2.connect(**DB_CONFIG)
-    #     cursor = conn.cursor()
-
-    #     # Insert data into 'main' table, allowing NULL values for finish_time and note
-    #     cursor.execute(
-    #         """
-    #         INSERT INTO main (activity_type, input_type, date, time, finish_time, note)
-    #         VALUES (%s, %s, %s, %s, %s, %s)
-    #         """,
-    #         (activity_type, input_type, date, start_time, finish_time if finish_time else None, note if note else None)
-    #     )
-
-    #     # Commit and close connection
-    #     conn.commit()
-    #     print("Data inserted successfully!")
-
-    # except Exception as e:
-    #     print("Error inserting data:", e)
-
-    # finally:
-    #     if 'cursor' in locals():
-    #         cursor.close()
-    #     if 'conn' in locals():
-    #         conn.close()
-
-    # activity_logs = fetch_activity_data()
-    # for entry in activity_logs:
-    #     print(f"📅 {entry['date']} ⏰ {entry['start_time']} 🏷 {entry['activity']} 📝 {entry['note']}")
-
-
-
-def calculate_duration(start_time_obj, finish_time_obj):
-    """Calculate time difference in hours and minutes between two datetime.time objects."""
-    try:
-        today = datetime.today().date()
-        start_dt = datetime.combine(today, start_time_obj)
-        finish_dt = datetime.combine(today, finish_time_obj)
-
-        # Handle overnight case
-        if finish_dt < start_dt:
-            finish_dt += timedelta(days=1)
-
-        duration = finish_dt - start_dt
-        total_minutes = int(duration.total_seconds() // 60)
-        hours = total_minutes // 60
-        minutes = total_minutes % 60
-        return f"{hours}h {minutes}m"
-    except Exception as e:
-        return f"Error: {e}"
-
-
-
-
-

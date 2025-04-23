@@ -3,10 +3,10 @@ from flask import redirect, url_for, request, jsonify, flash
 from datetime import datetime
 import time, os
 from dotenv import load_dotenv
-import json
+import json, csv
 import psycopg2
 import pandas as pd
-from postgres_commands import sql_new_entry
+from postgres_commands import sql_new_entry, sql_activity_list
 
 # should I add ioption to update notes with random input?2. Fetching Logs for the Dashboard View
 # need to make sure the manual input is not date in the future. Block if the date is ahead
@@ -205,3 +205,13 @@ def data_to_sql():
             finish_time = form_data['fTime']
             
     sql_new_entry(activity_type,input_type, date, current_time, finish_time, note)
+
+
+def download_activity():
+    selected_activity = request.form.get("activityFilter")
+    activity_results = sql_activity_list(selected_activity)
+    file_path = "activity_export.csv"
+    with open(file_path, mode='w', newline='', encoding='utf-8') as file:
+            writer = csv.writer(file)
+            writer.writerow(['Date', 'Start Time', 'Activity Type', 'Finish Time', 'Note'])  # Header
+            writer.writerows(activity_results)

@@ -140,3 +140,43 @@ def sql_new_entry(activity, input_type, date, start_time, finish_time = None, no
 
     activity_logs = fetch_activity_data()
    
+
+def sql_activity_list(activity):
+    """Fetches activity records from the PostgreSQL database filtered for download."""
+    DB_CONFIG = {
+        "database": os.getenv("DB_NAME"),
+        "user": os.getenv("DB_USER"),
+        "password": os.getenv("DB_PASSWORD"),
+        "host": os.getenv("DB_HOST"),
+        "port": os.getenv("DB_PORT")
+    }
+    # Mapping activity_type ID to readable activity names
+    ACTIVITY_MAP = {
+        1: "Food",
+        2: "Sleep",
+        3: "Potty"
+    }
+
+    try:
+        activity_id = next((k for k, v in ACTIVITY_MAP.items() if v == activity), None)
+        print(activity_id)
+        # Connect to PostgreSQL
+        conn = psycopg2.connect(**DB_CONFIG)
+        cursor = conn.cursor()
+
+        if activity_id is not None:
+            cursor.execute("""
+                SELECT date, time, activity_type, finish_time, note
+                FROM main
+                WHERE activity_type = %s
+                ORDER BY date DESC;
+            """, (activity_id,))
+            rows = cursor.fetchall()
+        else:
+            print("Invalid activity name:", activity)
+        return rows
+    finally:
+        if 'cursor' in locals():
+            cursor.close()
+        if 'conn' in locals():
+            conn.close()

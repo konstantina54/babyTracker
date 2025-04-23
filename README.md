@@ -19,8 +19,8 @@ This project showcases end-to-end backend and data engineering skills, including
 - **Language:** Python 3.10  
 - **Data Processing:** Pandas 
 - **Database:** PostgreSQL  
-- **Workflow Orchestration:** Apache Airflow   
-- **Cloud (Optional):** AWS S3 / GCP  
+- **Workflow Orchestration:** 
+- **Cloud (Optional):** AWS S3
 - **API Framework (Optional):** Flask 
 
 ---

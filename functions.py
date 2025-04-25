@@ -4,23 +4,12 @@ from datetime import datetime
 import time, os
 from dotenv import load_dotenv
 import json, csv
-import psycopg2
 import pandas as pd
-from postgres_commands import sql_new_entry, sql_activity_list
+from postgres_commands import sql_new_entry, sql_activity_list, calculate_duration
 
 # should I add ioption to update notes with random input?2. Fetching Logs for the Dashboard View
 # need to make sure the manual input is not date in the future. Block if the date is ahead
 
-
-DB_CONFIG = {
-    "database": os.getenv("DB_NAME"),
-    "user": os.getenv("DB_USER"),
-    "password": os.getenv("DB_PASSWORD"),
-    "host": os.getenv("DB_HOST"),
-    "port": os.getenv("DB_PORT")
-}
-
-load_dotenv(override=True)
 
 # def display_data():
 #     """Open file with collected activities"""
@@ -160,7 +149,7 @@ def nap_data_collected(activity):
 
 def data_to_sql():
     form_data = request.form.to_dict()
-    print("Received form data:", form_data)
+    # print("Received form data:", form_data)
     # needed for sql function activity_type, input_type, date, start_time, finish_time, note
     current_datetime = datetime.now()
     current_time = time.strftime("%H:%M:%S", time.localtime())
@@ -184,11 +173,13 @@ def data_to_sql():
                 # calculating nap start time and end time reformating for postgres
                 x = nap_data_collected(form_data)
                 if x is not None:
-                    activity_type = "sTime"
+                    activity_type = "sleep"
                     input_type = 'auto'
                     date = x['manualCalendar']
-                    current_time = x['sTime']
+                    start_time = x['sTime']
                     finish_time = x['fTime']
+                    note = calculate_duration(start_time, finish_time)
+                    sql_new_entry(activity_type,input_type, date, start_time, finish_time, note)
     else:
         input_type = 'manual'
         date = form_data['manualCalendar']
@@ -200,11 +191,12 @@ def data_to_sql():
             start_time = form_data['pottyTime']
             note = ' and '.join([key.capitalize() for key in ['no1', 'no2', 'both'] if key in form_data])
         elif 'sTime' in form_data or 'fTime' in form_data:
-            activity_type = 'sTime'
+            activity_type = 'sleep'
             start_time = form_data['sTime']
             finish_time = form_data['fTime']
-            
-    sql_new_entry(activity_type,input_type, date, current_time, finish_time, note)
+            # check if it calculates correctly the nap length
+            note = calculate_duration(start_time, finish_time)        
+        sql_new_entry(activity_type,input_type, date, start_time, finish_time, note)
 
 
 def download_activity():

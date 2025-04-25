@@ -47,3 +47,4 @@ function activity(){
         autoSection.style.display = "block";
      }   
 }
+

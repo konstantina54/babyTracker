@@ -26,7 +26,7 @@ def fetch_activity_data():
 
         # SQL query to retrieve relevant data
         cursor.execute("""
-            SELECT date, time, activity_type, finish_time, note FROM main ORDER BY date DESC;
+            SELECT date, time, activity_type, finish_time, note FROM main WHERE activity_type != '' ORDER BY date DESC;
         """)
 
         # Fetch all records from the query
@@ -45,6 +45,10 @@ def fetch_activity_data():
 
         # Drop Finish Time column
         df.drop(columns=['Finish Time'], inplace=True)
+        # Remove none values
+        df["Note"].fillna("", inplace = True)
+        # Capitalize activity types
+        df['Activity Type'] = df['Activity Type'].str.capitalize()
         return df  
 
     except psycopg2.Error as e:
@@ -144,3 +148,28 @@ def sql_activity_list(activity):
             cursor.close()
         if 'conn' in locals():
             conn.close()
+
+
+def sql_update(update_data):
+    """Update activity in postgres"""
+    # need to find a way to identify which record I am updating????
+    try:
+        # Connect to PostgreSQL
+        conn = psycopg2.connect(**DB_CONFIG)
+        cursor = conn.cursor()
+
+        if activity is not None:
+            cursor.execute("""
+                UPDATE main
+                SET color = 'red'
+                WHERE brand = 'Volvo'; 
+            """, (activity,))
+            rows = cursor.fetchall()
+        else:
+            print("Invalid activity name:", activity)
+        return rows
+    finally:
+        if 'cursor' in locals():
+            cursor.close()
+        if 'conn' in locals():
+            conn.close()   

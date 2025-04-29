@@ -149,7 +149,7 @@ def nap_data_collected(activity):
 
 def data_to_sql():
     form_data = request.form.to_dict()
-    # print("Received form data:", form_data)
+    print("Received form data:", form_data)
     # needed for sql function activity_type, input_type, date, start_time, finish_time, note
     current_datetime = datetime.now()
     current_time = time.strftime("%H:%M:%S", time.localtime())
@@ -161,7 +161,11 @@ def data_to_sql():
     input_type = ''
     finish_time = ''
     note = ''
-    if 'AutoCalendar' in form_data:
+    if 'customer_note' in form_data:
+        print(form_data['customer_note'])
+        # update db
+        
+    elif 'AutoCalendar' in form_data:
         input_type = 'auto'
         if 'foodTime' in form_data:
             activity_type = 'food'

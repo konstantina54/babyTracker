@@ -10,3 +10,4 @@ __pycache__
 config.txt
 .env
 .csv
+login.py
